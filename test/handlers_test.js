@@ -1,5 +1,30 @@
 const expect = require('chai').expect;
-const { serveFile, serveDashboard } = require('../src/handlers');
+const {
+  serveFile,
+  serveDashboard,
+  initializeServerCache
+} = require('../src/handlers');
+
+const files = {
+  './public/index.html': 'this will contain TODO Lists',
+  'data/todo_lists.json': `{"lists":[{
+    "id": 1,
+    "title": "Sports",
+    "description": "About sports",
+    "items": [
+      { "id": 1, "content": "Play game", "done": false },
+      { "id": 2, "content": "2", "done": false }
+    ]
+  }]}`
+};
+
+const fs = {
+  readFileSync: function(filePath, encoding) {
+    return files[filePath];
+  }
+};
+
+initializeServerCache(fs);
 
 describe('serveFile', function() {
   it('should respond with 404 error and `Resource Not Found` message', function() {

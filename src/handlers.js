@@ -1,4 +1,3 @@
-const fs = require('fs');
 const TODOLists = require('./entities/todo_lists');
 const getToDoListsHTML = require('./html_generators');
 const {
@@ -8,9 +7,22 @@ const {
 } = require('./constants');
 
 //Cache for all files
-const FILES_CACHE = {
-  dashboard: fs.readFileSync(HOME_PAGE_PATH, ENCODING_UTF8),
-  todoListsJSON: fs.readFileSync('data/todo_lists.json', ENCODING_UTF8)
+const FILES_CACHE = {};
+let toDoLists;
+
+const loadToDoLists = function(FILES_CACHE) {
+  const toDoListsData = JSON.parse(FILES_CACHE.todoListsJSON).lists;
+  return TODOLists.parse(toDoListsData);
+};
+
+const initializeServerCache = function(fs) {
+  FILES_CACHE.dashboard = fs.readFileSync(HOME_PAGE_PATH, ENCODING_UTF8);
+  FILES_CACHE.todoListsJSON = fs.readFileSync(
+    'data/todo_lists.json',
+    ENCODING_UTF8
+  );
+
+  toDoLists = loadToDoLists(FILES_CACHE);
 };
 
 const logRequest = function(req, res, next, send) {
@@ -29,9 +41,7 @@ const serveFile = function(req, res, next, send) {
 };
 
 const serveDashboard = function(req, res, next, send) {
-  const { lists } = JSON.parse(FILES_CACHE.todoListsJSON);
-  const todoLists = TODOLists.parse(lists);
-  const todoListsHTML = getToDoListsHTML(todoLists);
+  const todoListsHTML = getToDoListsHTML(toDoLists);
   const dashboardHMTL = FILES_CACHE.dashboard.replace(
     TODO_LISTS_PLACEHOLDER,
     todoListsHTML
@@ -40,4 +50,9 @@ const serveDashboard = function(req, res, next, send) {
   send(res, 200, dashboardHMTL, 'text/html');
 };
 
-module.exports = { logRequest, serveFile, serveDashboard };
+module.exports = {
+  logRequest,
+  serveFile,
+  serveDashboard,
+  initializeServerCache
+};

@@ -1,6 +1,14 @@
 const Sheeghra = require('./sheeghra');
-const { logRequest, serveFile, serveDashboard } = require('./handlers');
+const fs = require('fs');
+const {
+  logRequest,
+  serveFile,
+  serveDashboard,
+  initializeServerCache
+} = require('./handlers');
 const app = new Sheeghra();
+
+initializeServerCache(fs);
 
 app.use(logRequest);
 app.get('/', serveDashboard);
