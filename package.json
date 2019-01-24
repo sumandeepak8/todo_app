@@ -1,0 +1,20 @@
+{
+  "name": "todo_app",
+  "version": "1.0.0",
+  "description": "An online ToDo App",
+  "main": "server.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "nyc": "^13.1.0"
+  }
+}
