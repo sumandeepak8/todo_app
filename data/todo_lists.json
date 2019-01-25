@@ -1,31 +1,4 @@
 {
-  "lists": [
-    {
-      "id": 1,
-      "title": "Sports",
-      "description": "About sports",
-      "items": [
-        { "id": 1, "content": "Play game", "done": false },
-        { "id": 2, "content": "2", "done": false }
-      ]
-    },
-    {
-      "id": 2,
-      "title": "Music",
-      "description": "About music",
-      "items": [
-        { "id": 1, "content": "Play music", "done": false },
-        { "id": 2, "content": "listen music", "done": false }
-      ]
-    },
-    {
-      "id": 2,
-      "title": "Music",
-      "description": "About music",
-      "items": [
-        { "id": 1, "content": "Play music", "done": false },
-        { "id": 2, "content": "listen music", "done": false }
-      ]
-    }
-  ]
+  "lists": [],
+  "latestListID": 0
 }

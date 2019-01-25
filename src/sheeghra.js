@@ -4,11 +4,17 @@ const isMatching = (req, route) => {
   return true;
 };
 
-const send = function(res, statusCode, content, contentType) {
-  res.statusCode = statusCode;
-  res.setHeader('Content-Type', contentType);
-  res.write(content);
-  res.end();
+const send = function(statusCode, content, contentType) {
+  this.statusCode = statusCode;
+  this.setHeader('Content-Type', contentType);
+  this.write(content);
+  this.end();
+};
+
+const redirect = function(location) {
+  this.statusCode = 302;
+  this.setHeader('location', location);
+  this.end();
 };
 
 class Sheeghra {
@@ -29,13 +35,15 @@ class Sheeghra {
   }
 
   handleRequest(req, res) {
+    res.send = send;
+    res.redirect = redirect;
     let matchingRoutes = this.routes.filter(r => isMatching(req, r));
     let remaining = [...matchingRoutes];
     let next = () => {
       let current = remaining[0];
       if (!current) return;
       remaining = remaining.slice(1);
-      current.handler(req, res, next, send);
+      current.handler(req, res, next);
     };
     next();
   }
