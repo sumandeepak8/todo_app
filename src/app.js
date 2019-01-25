@@ -15,7 +15,7 @@ const FILES_CACHE = initializeServerCache(fs);
 const todoLists = loadToDoLists(FILES_CACHE);
 const serveFile = createFileServer(FILES_CACHE);
 const serveDashboard = createDashboardServer(FILES_CACHE, todoLists);
-const addList = createAddListHandler(FILES_CACHE, todoLists, fs);
+const addList = createAddListHandler(todoLists, fs);
 
 app.use(logRequest);
 app.use(readPostBody);
