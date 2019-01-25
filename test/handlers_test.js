@@ -1,5 +1,10 @@
 const expect = require('chai').expect;
-const { serveFile, serveDashboard, loadToDoLists } = require('../src/handlers');
+const {
+  createFileServer,
+  createDashboardServer,
+  loadToDoLists,
+  initializeServerCache
+} = require('../src/handlers');
 
 const FILES_CACHE = {
   dashboard: `<body>
@@ -15,7 +20,8 @@ const FILES_CACHE = {
       { "id": 2, "content": "2", "done": false }
     ]
   }]
-}`
+}`,
+  '/somepage': 'this is some page'
 };
 
 describe('serveFile', function() {
@@ -29,7 +35,20 @@ describe('serveFile', function() {
     const res = {};
     const req = { method: 'GET', url: '/something' };
     const next = () => {};
-    serveFile(FILES_CACHE)(req, res, next, send);
+    createFileServer(FILES_CACHE)(req, res, next, send);
+  });
+
+  it('should respond with 200 status code and contentType text/html', function() {
+    const send = function(res, statusCode, content, contentType) {
+      expect(statusCode).to.equal(200);
+      expect(contentType).to.equal('text/html');
+      expect(content).to.equal('this is some page');
+    };
+
+    const res = {};
+    const req = { method: 'GET', url: '/somepage' };
+    const next = () => {};
+    createFileServer(FILES_CACHE)(req, res, next, send);
   });
 });
 
@@ -45,6 +64,30 @@ describe('serveDashBoard', function() {
     const res = {};
     const req = { method: 'GET', url: '/' };
     const next = () => {};
-    serveDashboard(FILES_CACHE, todoLists)(req, res, next, send);
+    createDashboardServer(FILES_CACHE, todoLists)(req, res, next, send);
+  });
+});
+
+describe('initializeServerCache', function() {
+  const files = {
+    './public/index.html': 'This is index.html',
+    'data/todo_lists.json': 'this is todo_lists.json file'
+  };
+
+  const fs = {
+    readFileSync: function(filePath, encoding) {
+      return files[filePath];
+    }
+  };
+
+  it('should return file cache of two files, dashboard file and todoListsJSON', function() {
+    const fileCache = initializeServerCache(fs);
+    expect(fileCache)
+      .to.have.property('dashboard')
+      .to.equal('This is index.html');
+
+    expect(fileCache)
+      .to.have.property('todoListsJSON')
+      .to.equal('this is todo_lists.json file');
   });
 });
