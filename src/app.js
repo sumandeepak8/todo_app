@@ -2,13 +2,17 @@ const Sheeghra = require('./sheeghra');
 const fs = require('fs');
 const {
   logRequest,
-  serveFile,
-  serveDashboard,
-  initializeServerCache
+  createFileServer,
+  createDashboardServer,
+  initializeServerCache,
+  loadToDoLists
 } = require('./handlers');
 const app = new Sheeghra();
 
-initializeServerCache(fs);
+const FILES_CACHE = initializeServerCache(fs);
+const todoLists = loadToDoLists(FILES_CACHE);
+const serveFile = createFileServer(FILES_CACHE);
+const serveDashboard = createDashboardServer(FILES_CACHE, todoLists);
 
 app.use(logRequest);
 app.get('/', serveDashboard);

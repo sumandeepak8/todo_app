@@ -1,13 +1,12 @@
 const expect = require('chai').expect;
-const {
-  serveFile,
-  serveDashboard,
-  initializeServerCache
-} = require('../src/handlers');
+const { serveFile, serveDashboard, loadToDoLists } = require('../src/handlers');
 
-const files = {
-  './public/index.html': 'this will contain TODO Lists',
-  'data/todo_lists.json': `{"lists":[{
+const FILES_CACHE = {
+  dashboard: `<body>
+  <h1>TODO Lists</h1>
+  <div>____TODO_LISTS____</div>
+</body>`,
+  todoListsJSON: `{"lists":[{
     "id": 1,
     "title": "Sports",
     "description": "About sports",
@@ -15,16 +14,9 @@ const files = {
       { "id": 1, "content": "Play game", "done": false },
       { "id": 2, "content": "2", "done": false }
     ]
-  }]}`
+  }]
+}`
 };
-
-const fs = {
-  readFileSync: function(filePath, encoding) {
-    return files[filePath];
-  }
-};
-
-initializeServerCache(fs);
 
 describe('serveFile', function() {
   it('should respond with 404 error and `Resource Not Found` message', function() {
@@ -37,7 +29,7 @@ describe('serveFile', function() {
     const res = {};
     const req = { method: 'GET', url: '/something' };
     const next = () => {};
-    serveFile(req, res, next, send);
+    serveFile(FILES_CACHE)(req, res, next, send);
   });
 });
 
@@ -49,9 +41,10 @@ describe('serveDashBoard', function() {
       expect(content).to.contain('TODO Lists');
     };
 
+    const todoLists = loadToDoLists(FILES_CACHE);
     const res = {};
     const req = { method: 'GET', url: '/' };
     const next = () => {};
-    serveDashboard(req, res, next, send);
+    serveDashboard(FILES_CACHE, todoLists)(req, res, next, send);
   });
 });
