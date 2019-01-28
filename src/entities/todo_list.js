@@ -38,10 +38,7 @@ class TODOList {
   }
 
   getItemById(itemid) {
-    for (let item of this.items) {
-      if (item.getId() == itemid) return item;
-    }
-    return null;
+    return this.items.find(item => item.getId() == itemid);
   }
 
   deleteItem(itemid) {

@@ -53,9 +53,9 @@ const createFileServer = FILES_CACHE =>
     res.send(200, content, 'text/html');
   };
 
-const createDashboardServer = (FILES_CACHE, toDoLists) =>
+const createDashboardServer = (FILES_CACHE, todoLists) =>
   function(req, res, next) {
-    const todoListsHTML = getToDoListsHTML(toDoLists);
+    const todoListsHTML = getToDoListsHTML(todoLists);
     const dashboardHMTL = FILES_CACHE[HOME_PAGE_PATH].replace(
       TODO_LISTS_PLACEHOLDER,
       todoListsHTML
@@ -68,8 +68,7 @@ const createAddListHandler = (todoLists, fs) =>
   function(req, res, next) {
     let { title, description } = readParameters(req.body);
     todoLists.addTODOList(title, description, []);
-    const todoListsJSON = JSON.stringify(todoLists);
-    saveToDoList(res, todoListsJSON, fs);
+    saveToDoList(res, todoLists, fs);
   };
 
 const readPostBody = function(req, res, next) {
@@ -99,36 +98,33 @@ const separateListIdAndItems = function(itemsAndListId) {
   return { listID, itemContents };
 };
 
-const createAddItemsHandler = (toDoLists, fs) =>
+const createAddItemsHandler = (todoLists, fs) =>
   function(req, res, next) {
     const itemsAndListId = readParameters(req.body);
     const { listID, itemContents } = separateListIdAndItems(itemsAndListId);
-    const targetList = toDoLists.getListByID(listID);
+    const targetList = todoLists.getListByID(listID);
     itemContents.forEach(content => targetList.addItem(content, false));
-    const todoListsJSON = JSON.stringify(toDoLists);
-    saveToDoList(res, todoListsJSON, fs);
+    saveToDoList(res, todoLists, fs);
   };
 
-const createDeleteListHandler = (toDoLists, fs) =>
+const createDeleteListHandler = (todoLists, fs) =>
   function(req, res, next) {
     const listid = +readParameters(req.body).listid;
-    toDoLists.deleteListByID(listid);
-    const todoListsJSON = JSON.stringify(toDoLists);
-    saveToDoList(res, todoListsJSON, fs);
+    todoLists.deleteListByID(listid);
+    saveToDoList(res, todoLists, fs);
   };
 
-const createDeleteItemHandler = (toDoLists, fs) =>
+const createDeleteItemHandler = (todoLists, fs) =>
   function(req, res, next) {
     const { listid, itemid } = readParameters(req.body);
-    toDoLists.getListByID(+listid).deleteItem(+itemid);
-    const todoListsJSON = JSON.stringify(toDoLists);
-    saveToDoList(res, todoListsJSON, fs);
+    todoLists.getListByID(+listid).deleteItem(+itemid);
+    saveToDoList(res, todoLists, fs);
   };
 
-const createEditItemFormServer = (FILES_CACHE, toDoLists) =>
+const createEditItemFormServer = (FILES_CACHE, todoLists) =>
   function(req, res, next) {
     const { listid, itemid } = readParameters(req.body);
-    const itemContent = toDoLists
+    const itemContent = todoLists
       .getListByID(+listid)
       .getItemById(+itemid)
       .getContent();
@@ -143,15 +139,14 @@ const createEditItemFormServer = (FILES_CACHE, toDoLists) =>
     res.send(200, content, 'text/html');
   };
 
-const createSaveItemHandler = (toDoLists, fs) => (req, res, next) => {
+const createSaveItemHandler = (todoLists, fs) => (req, res, next) => {
   const { itemid, listid, itemcontent } = readParameters(req.body);
-  toDoLists
+  todoLists
     .getListByID(+listid)
     .getItemById(+itemid)
     .setContent(itemcontent);
 
-  const todoListsJSON = JSON.stringify(toDoLists);
-  saveToDoList(res, todoListsJSON, fs);
+  saveToDoList(res, todoLists, fs);
 };
 
 module.exports = {

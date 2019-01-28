@@ -28,10 +28,7 @@ class TODOLists {
   }
 
   getListByID(id) {
-    for (let list of this.lists) {
-      if (list.getId() == id) return list;
-    }
-    return null;
+    return this.lists.find(list => list.getId() == id);
   }
 
   deleteListByID(id) {

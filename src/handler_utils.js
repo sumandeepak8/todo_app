@@ -14,7 +14,8 @@ const readParameters = requestBody => {
     .reduce(assignKeyValue, {});
 };
 
-const saveToDoList = function(res, todoListsJSON, fs) {
+const saveToDoList = function(res, todoLists, fs) {
+  const todoListsJSON = JSON.stringify(todoLists);
   fs.writeFile(TODO_LISTS_PATH, todoListsJSON, err => {
     if (err) {
       res.send(500, 'Internal Server Error', 'text/plain');
