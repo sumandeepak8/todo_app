@@ -10,7 +10,10 @@ const {
   HOME_PAGE_PATH,
   ENCODING_UTF8,
   TODO_LISTS_PLACEHOLDER,
-  TODO_LISTS_PATH
+  TODO_LISTS_PATH,
+  LIST_ID_PLACEHOLDER,
+  ADD_ITEMS_PAGE,
+  ERROR_404
 } = require('./constants');
 
 const loadToDoLists = function(FILES_CACHE) {
@@ -51,7 +54,7 @@ const createFileServer = FILES_CACHE =>
   function(req, res, next) {
     const content = FILES_CACHE[req.url];
     if (!content) {
-      res.send(404, 'Resource Not Found', 'text/plain');
+      res.send(404, ERROR_404, 'text/plain');
       return;
     }
     res.send(200, content, 'text/html');
@@ -89,23 +92,26 @@ const createAddItemsFormServer = FILES_CACHE =>
   function(req, res, next) {
     const parameters = getParametersFromUrl(req.url);
     const { listid } = readParameters(parameters);
-    const content = FILES_CACHE['/add_items.html'].replace(
-      '____LIST_ID____',
+    const content = FILES_CACHE[ADD_ITEMS_PAGE].replace(
+      LIST_ID_PLACEHOLDER,
       listid
     );
     res.send(200, content, 'text/html');
   };
 
+const separateListIdAndItems = function(itemsAndListId) {
+  const listID = +itemsAndListId.listid;
+  delete itemsAndListId.listid;
+  const itemContents = Object.values(itemsAndListId);
+  return { listID, itemContents };
+};
+
 const createAddItemsHandler = (toDoLists, fs) =>
   function(req, res, next) {
     const itemsAndListId = readParameters(req.body);
-    const targetListID = +itemsAndListId.listid;
-    delete itemsAndListId.listid;
-    const targetList = toDoLists.getListByID(targetListID);
-    const itemContents = Object.values(itemsAndListId);
-    itemContents.forEach(content => {
-      targetList.addItem(content, false);
-    });
+    const { listID, itemContents } = separateListIdAndItems(itemsAndListId);
+    const targetList = toDoLists.getListByID(listID);
+    itemContents.forEach(content => targetList.addItem(content, false));
     const todoListsJSON = JSON.stringify(toDoLists);
     saveToDoList(res, todoListsJSON, fs);
   };
