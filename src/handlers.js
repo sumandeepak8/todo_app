@@ -108,8 +108,7 @@ const createAddItemsHandler = (toDoLists, fs) =>
 
 const createDeleteListHandler = (toDoLists, fs) =>
   function(req, res, next) {
-    const parameters = getParametersFromUrl(req.url);
-    const listid = +readParameters(parameters).listid;
+    const listid = +readParameters(req.body).listid;
     toDoLists.deleteListByID(listid);
     const todoListsJSON = JSON.stringify(toDoLists);
     saveToDoList(res, todoListsJSON, fs);

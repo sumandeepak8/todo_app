@@ -11,7 +11,10 @@ const getToDoListHTML = function(todoList) {
       .map(getToDoItemHTML)
       .join('')}
     <a href='/additems?listid=${todoList.getId()}'>Add Items</a>
-    <h3><a href="/deletelist?listid=${todoList.getId()}">Delete</a></h3>
+    <form method="post" action="/deletelist">
+    <input type='hidden' name='listid' value='${todoList.getId()}'/>
+    <input value="Delete" type="submit"/> 
+    </form>
       <hr>
   </div>`;
 };

@@ -30,7 +30,7 @@ app.get('/index.html', serveDashboard);
 app.post('/addlist', addList);
 app.get(/^\/additems/, serveAddItemsForm);
 app.post('/additems', saveItems);
-app.get(/^\/deletelist/, deleteList);
+app.post('/deletelist', deleteList);
 app.use(serveFile);
 
 module.exports = app.handleRequest.bind(app);
