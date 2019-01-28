@@ -1,11 +1,16 @@
 const getToDoItemHTML = function(listid, todoItem) {
-  return `<p>${todoItem.getContent()}
-  <form method="post" action="/deleteitem">
+  return `<div>${todoItem.getContent()}
+  <form method="post" action="/edititem" style="display:inline">
+  <input type='hidden' name='listid' value='${listid}'/>
+  <input type='hidden' name='itemid' value='${todoItem.getId()}'/>
+  <input value="Edit" type="submit"/> 
+  </form>
+  <form method="post" action="/deleteitem" style="display:inline">
     <input type='hidden' name='listid' value='${listid}'/>
     <input type='hidden' name='itemid' value='${todoItem.getId()}'/>
-    <input value="Delete item" type="submit"/> 
+    <input value="Delete" type="submit"/> 
     </form>
-  </p>`;
+  </div>`;
 };
 
 const getToDoListHTML = function(todoList) {

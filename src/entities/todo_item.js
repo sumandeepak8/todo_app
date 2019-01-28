@@ -22,6 +22,10 @@ class TODOItem {
     return this.content;
   }
 
+  setContent(content) {
+    this.content = content;
+  }
+
   isDone() {
     return this.done;
   }

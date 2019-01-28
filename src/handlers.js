@@ -14,7 +14,10 @@ const {
   TODO_LISTS_PATH,
   LIST_ID_PLACEHOLDER,
   ADD_ITEMS_PAGE_PATH,
-  ERROR_404
+  ERROR_404,
+  EDIT_ITEM_PAGE_PATH,
+  ITEM_CONTENT_PLACEHOLDER,
+  ITEM_ID_PLACEHOLDER
 } = require('./constants');
 
 const loadToDoLists = function(FILES_CACHE) {
@@ -122,6 +125,35 @@ const createDeleteItemHandler = (toDoLists, fs) =>
     saveToDoList(res, todoListsJSON, fs);
   };
 
+const createEditItemFormServer = (FILES_CACHE, toDoLists) =>
+  function(req, res, next) {
+    const { listid, itemid } = readParameters(req.body);
+    const itemContent = toDoLists
+      .getListByID(+listid)
+      .getItemById(+itemid)
+      .getContent();
+
+    const content = FILES_CACHE[EDIT_ITEM_PAGE_PATH].replace(
+      LIST_ID_PLACEHOLDER,
+      listid
+    )
+      .replace(ITEM_ID_PLACEHOLDER, itemid)
+      .replace(ITEM_CONTENT_PLACEHOLDER, itemContent);
+
+    res.send(200, content, 'text/html');
+  };
+
+const createSaveItemHandler = (toDoLists, fs) => (req, res, next) => {
+  const { itemid, listid, itemcontent } = readParameters(req.body);
+  toDoLists
+    .getListByID(+listid)
+    .getItemById(+itemid)
+    .setContent(itemcontent);
+
+  const todoListsJSON = JSON.stringify(toDoLists);
+  saveToDoList(res, todoListsJSON, fs);
+};
+
 module.exports = {
   logRequest,
   createFileServer,
@@ -133,5 +165,7 @@ module.exports = {
   createAddItemsFormServer,
   createAddItemsHandler,
   createDeleteListHandler,
-  createDeleteItemHandler
+  createDeleteItemHandler,
+  createEditItemFormServer,
+  createSaveItemHandler
 };
