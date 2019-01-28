@@ -106,6 +106,15 @@ const createAddItemsHandler = (toDoLists, fs) =>
     saveToDoList(res, todoListsJSON, fs);
   };
 
+const createDeleteListHandler = (toDoLists, fs) =>
+  function(req, res, next) {
+    const parameters = getParametersFromUrl(req.url);
+    const listid = +readParameters(parameters).listid;
+    toDoLists.deleteListByID(listid);
+    const todoListsJSON = JSON.stringify(toDoLists);
+    saveToDoList(res, todoListsJSON, fs);
+  };
+
 module.exports = {
   logRequest,
   createFileServer,
@@ -115,5 +124,6 @@ module.exports = {
   createAddListHandler,
   readPostBody,
   createAddItemsFormServer,
-  createAddItemsHandler
+  createAddItemsHandler,
+  createDeleteListHandler
 };

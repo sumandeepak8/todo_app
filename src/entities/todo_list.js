@@ -8,7 +8,7 @@ class TODOList {
     this.items = items;
     this.latestItemID = initialID;
   }
-
+  
   static parse(todoListData) {
     const { id, title, description, items, latestItemID } = todoListData;
     const todoItems = items.map(TODOItem.parse);

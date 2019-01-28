@@ -33,6 +33,10 @@ class TODOLists {
     }
     return null;
   }
+
+  deleteListByID(id) {
+    this.lists = this.lists.filter(list => list.id != id);
+  }
 }
 
 module.exports = TODOLists;

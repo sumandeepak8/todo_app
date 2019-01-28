@@ -9,7 +9,8 @@ const {
   createAddListHandler,
   readPostBody,
   createAddItemsFormServer,
-  createAddItemsHandler
+  createAddItemsHandler,
+  createDeleteListHandler
 } = require('./handlers');
 const app = new Sheeghra();
 
@@ -20,6 +21,7 @@ const serveDashboard = createDashboardServer(FILES_CACHE, todoLists);
 const addList = createAddListHandler(todoLists, fs);
 const serveAddItemsForm = createAddItemsFormServer(FILES_CACHE);
 const saveItems = createAddItemsHandler(todoLists, fs);
+const deleteList = createDeleteListHandler(todoLists, fs);
 
 app.use(logRequest);
 app.use(readPostBody);
@@ -28,6 +30,7 @@ app.get('/index.html', serveDashboard);
 app.post('/addlist', addList);
 app.get(/^\/additems/, serveAddItemsForm);
 app.post('/additems', saveItems);
+app.get(/^\/deletelist/, deleteList);
 app.use(serveFile);
 
 module.exports = app.handleRequest.bind(app);

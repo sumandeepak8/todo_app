@@ -11,6 +11,7 @@ const getToDoListHTML = function(todoList) {
       .map(getToDoItemHTML)
       .join('')}
     <a href='/additems?listid=${todoList.getId()}'>Add Items</a>
+    <h3><a href="/deletelist?listid=${todoList.getId()}">Delete</a></h3>
       <hr>
   </div>`;
 };
