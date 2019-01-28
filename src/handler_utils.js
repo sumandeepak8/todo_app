@@ -24,7 +24,12 @@ const saveToDoList = function(res, todoListsJSON, fs) {
   });
 };
 
+const getParametersFromUrl = function(url) {
+  return url.split('?')[1];
+};
+
 module.exports = {
   saveToDoList,
-  readParameters
+  readParameters,
+  getParametersFromUrl
 };

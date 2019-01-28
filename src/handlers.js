@@ -1,6 +1,11 @@
 const TODOLists = require('./entities/todo_lists');
 const getToDoListsHTML = require('./html_generators');
-const { saveToDoList, readParameters } = require('./handler_utils');
+const {
+  saveToDoList,
+  readParameters,
+  getParametersFromUrl
+} = require('./handler_utils');
+
 const {
   HOME_PAGE_PATH,
   ENCODING_UTF8,
@@ -20,6 +25,16 @@ const initializeServerCache = function(fs) {
 
   FILES_CACHE['/add_todo_list.html'] = fs.readFileSync(
     './public/add_todo_list.html',
+    ENCODING_UTF8
+  );
+
+  FILES_CACHE['/add_items.html'] = fs.readFileSync(
+    './public/add_items.html',
+    ENCODING_UTF8
+  );
+
+  FILES_CACHE['/add_items.js'] = fs.readFileSync(
+    './public/add_items.js',
     ENCODING_UTF8
   );
 
@@ -70,6 +85,31 @@ const readPostBody = function(req, res, next) {
   });
 };
 
+const createAddItemsFormServer = FILES_CACHE =>
+  function(req, res, next) {
+    const parameters = getParametersFromUrl(req.url);
+    const { listid } = readParameters(parameters);
+    const content = FILES_CACHE['/add_items.html'].replace(
+      '____LIST_ID____',
+      listid
+    );
+    res.send(200, content, 'text/html');
+  };
+
+const createAddItemsHandler = (toDoLists, fs) =>
+  function(req, res, next) {
+    const itemsAndListId = readParameters(req.body);
+    const targetListID = +itemsAndListId.listid;
+    delete itemsAndListId.listid;
+    const targetList = toDoLists.getListByID(targetListID);
+    const itemContents = Object.values(itemsAndListId);
+    itemContents.forEach(content => {
+      targetList.addItem(content, false);
+    });
+    const todoListsJSON = JSON.stringify(toDoLists);
+    saveToDoList(res, todoListsJSON, fs);
+  };
+
 module.exports = {
   logRequest,
   createFileServer,
@@ -77,5 +117,7 @@ module.exports = {
   initializeServerCache,
   loadToDoLists,
   createAddListHandler,
-  readPostBody
+  readPostBody,
+  createAddItemsFormServer,
+  createAddItemsHandler
 };

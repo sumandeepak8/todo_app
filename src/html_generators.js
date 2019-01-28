@@ -9,7 +9,9 @@ const getToDoListHTML = function(todoList) {
     ${todoList
       .getItems()
       .map(getToDoItemHTML)
-      .join('')}  
+      .join('')}
+    <a href='/additems?listid=${todoList.getId()}'>Add Items</a>
+      <hr>
   </div>`;
 };
 

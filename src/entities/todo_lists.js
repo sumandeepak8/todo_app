@@ -13,12 +13,25 @@ class TODOLists {
 
   addTODOList(title, description, items) {
     this.latestListID = this.latestListID + 1;
-    const todoList = new TODOList(this.latestListID, title, description, items, 0);
+    const todoList = new TODOList(
+      this.latestListID,
+      title,
+      description,
+      items,
+      0
+    );
     this.lists.push(todoList);
   }
 
   getTODOLists() {
     return this.lists;
+  }
+
+  getListByID(id) {
+    for (let list of this.lists) {
+      if (list.getId() == id) return list;
+    }
+    return null;
   }
 }
 
