@@ -6,40 +6,29 @@ const {
   getParametersFromUrl
 } = require('./handler_utils');
 
+const { readDirectory } = require('./utils/file');
+
 const {
   HOME_PAGE_PATH,
-  ENCODING_UTF8,
   TODO_LISTS_PLACEHOLDER,
   TODO_LISTS_PATH,
   LIST_ID_PLACEHOLDER,
-  ADD_ITEMS_PAGE,
+  ADD_ITEMS_PAGE_PATH,
   ERROR_404
 } = require('./constants');
 
 const loadToDoLists = function(FILES_CACHE) {
-  const todoListsData = JSON.parse(FILES_CACHE.todoListsJSON);
+  const todoListsData = JSON.parse(FILES_CACHE[TODO_LISTS_PATH]);
   return TODOLists.parse(todoListsData);
 };
 
 const initializeServerCache = function(fs) {
   const FILES_CACHE = {};
-  FILES_CACHE.dashboard = fs.readFileSync(HOME_PAGE_PATH, ENCODING_UTF8);
-  FILES_CACHE.todoListsJSON = fs.readFileSync(TODO_LISTS_PATH, ENCODING_UTF8);
 
-  FILES_CACHE['/add_todo_list.html'] = fs.readFileSync(
-    './public/add_todo_list.html',
-    ENCODING_UTF8
-  );
-
-  FILES_CACHE['/add_items.html'] = fs.readFileSync(
-    './public/add_items.html',
-    ENCODING_UTF8
-  );
-
-  FILES_CACHE['/add_items.js'] = fs.readFileSync(
-    './public/add_items.js',
-    ENCODING_UTF8
-  );
+  const data_files = readDirectory('./data', fs);
+  const public_files = readDirectory('./public', fs);
+  Object.assign(FILES_CACHE, public_files);
+  Object.assign(FILES_CACHE, data_files);
 
   return FILES_CACHE;
 };
@@ -52,8 +41,9 @@ const logRequest = function(req, res, next) {
 
 const createFileServer = FILES_CACHE =>
   function(req, res, next) {
-    const content = FILES_CACHE[req.url];
-    if (!content) {
+    const filePath = `./public${req.url}`;
+    const content = FILES_CACHE[filePath];
+    if (content == undefined) {
       res.send(404, ERROR_404, 'text/plain');
       return;
     }
@@ -63,7 +53,7 @@ const createFileServer = FILES_CACHE =>
 const createDashboardServer = (FILES_CACHE, toDoLists) =>
   function(req, res, next) {
     const todoListsHTML = getToDoListsHTML(toDoLists);
-    const dashboardHMTL = FILES_CACHE.dashboard.replace(
+    const dashboardHMTL = FILES_CACHE[HOME_PAGE_PATH].replace(
       TODO_LISTS_PLACEHOLDER,
       todoListsHTML
     );
@@ -92,7 +82,7 @@ const createAddItemsFormServer = FILES_CACHE =>
   function(req, res, next) {
     const parameters = getParametersFromUrl(req.url);
     const { listid } = readParameters(parameters);
-    const content = FILES_CACHE[ADD_ITEMS_PAGE].replace(
+    const content = FILES_CACHE[ADD_ITEMS_PAGE_PATH].replace(
       LIST_ID_PLACEHOLDER,
       listid
     );

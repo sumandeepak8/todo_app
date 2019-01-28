@@ -3,7 +3,7 @@ const { TODO_LISTS_PATH } = require('./constants');
 const splitKeyValue = pair => pair.split('=');
 
 const assignKeyValue = (parameters, [key, value]) => {
-  parameters[key] = value;
+  parameters[key] = unescape(value).replace(/\+/g, ' ');
   return parameters;
 };
 
