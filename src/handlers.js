@@ -20,7 +20,10 @@ const {
   ITEM_ID_PLACEHOLDER,
   EDIT_LIST_PAGE_PATH,
   LIST_DESCRIPTION_PLACEHOLDER,
-  LIST_TITLE_PLACEHOLDER
+  LIST_TITLE_PLACEHOLDER,
+  DATA_DIRECTORY,
+  PUBLIC_DIRECTORY,
+  DEFAULT_TODO_LISTS_JSON
 } = require('./constants');
 
 const loadToDoLists = function(FILES_CACHE) {
@@ -28,11 +31,18 @@ const loadToDoLists = function(FILES_CACHE) {
   return TODOLists.parse(todoListsData);
 };
 
+const initializeDataDirectory = function(fs) {
+  if (!fs.existsSync(DATA_DIRECTORY)) {
+    fs.mkdirSync(DATA_DIRECTORY);
+    fs.writeFileSync(TODO_LISTS_PATH, DEFAULT_TODO_LISTS_JSON);
+  }
+};
+
 const initializeServerCache = function(fs) {
   const FILES_CACHE = {};
-
-  const data_files = readDirectory('./data', fs);
-  const public_files = readDirectory('./public', fs);
+  initializeDataDirectory(fs);
+  const data_files = readDirectory(DATA_DIRECTORY, fs);
+  const public_files = readDirectory(PUBLIC_DIRECTORY, fs);
   Object.assign(FILES_CACHE, public_files);
   Object.assign(FILES_CACHE, data_files);
 
@@ -47,7 +57,7 @@ const logRequest = function(req, res, next) {
 
 const createFileServer = FILES_CACHE =>
   function(req, res, next) {
-    const filePath = `./public${req.url}`;
+    const filePath = PUBLIC_DIRECTORY + req.url;
     const content = FILES_CACHE[filePath];
     if (content == undefined) {
       res.send(404, ERROR_404, 'text/plain');

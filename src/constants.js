@@ -11,6 +11,9 @@ const ERROR_404 = 'Resource not found';
 const EDIT_LIST_PAGE_PATH = './public/edit_list.html';
 const LIST_DESCRIPTION_PLACEHOLDER = '____LIST_DESCRIPTION____';
 const LIST_TITLE_PLACEHOLDER = '____LIST_TITLE____';
+const DATA_DIRECTORY = './data';
+const PUBLIC_DIRECTORY = './public';
+const DEFAULT_TODO_LISTS_JSON = '{"lists":[], "latestListID":0}';
 
 module.exports = {
   HOME_PAGE_PATH,
@@ -25,5 +28,8 @@ module.exports = {
   ITEM_ID_PLACEHOLDER,
   EDIT_LIST_PAGE_PATH,
   LIST_DESCRIPTION_PLACEHOLDER,
-  LIST_TITLE_PLACEHOLDER
+  LIST_TITLE_PLACEHOLDER,
+  DATA_DIRECTORY,
+  PUBLIC_DIRECTORY,
+  DEFAULT_TODO_LISTS_JSON
 };
