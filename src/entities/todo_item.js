@@ -10,12 +10,8 @@ class TODOItem {
     return new TODOItem(id, content, done);
   }
 
-  MarkAsDone() {
-    this.done = true;
-  }
-
-  MarkAsUndone() {
-    this.done = false;
+  toggleStatus() {
+    this.done = !this.done;
   }
 
   getContent() {

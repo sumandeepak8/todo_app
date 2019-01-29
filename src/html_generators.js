@@ -16,9 +16,15 @@ const listManipulationForm = function(listId, action, buttonLabel) {
 
 const getToDoItemHTML = function(listId, todoItem) {
   const itemId = todoItem.getId();
-  return `<div>${todoItem.getContent()}
+  const isDone = todoItem.isDone();
+  let buttonLabel = 'Done';
+  if (isDone) buttonLabel = 'Undone';
+  return `<div>
+  --DONE: ${isDone}--
+  ${todoItem.getContent()}
   ${itemManipulationForm(listId, itemId, '/edititem', 'Edit')}
   ${itemManipulationForm(listId, itemId, '/deleteitem', 'Delete')}
+  ${itemManipulationForm(listId, itemId, '/togglestatus', buttonLabel)}
   </div>`;
 };
 

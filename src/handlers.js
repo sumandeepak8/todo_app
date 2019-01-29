@@ -131,7 +131,7 @@ const createDeleteListHandler = (todoLists, fs) =>
 const createDeleteItemHandler = (todoLists, fs) =>
   function(req, res, next) {
     const { listid, itemid } = readParameters(req.body);
-    todoLists.getListByID(+listid).deleteItem(+itemid);
+    todoLists.getListByID(listid).deleteItem(itemid);
     saveToDoList(res, todoLists, fs);
   };
 
@@ -139,8 +139,8 @@ const createEditItemFormServer = (FILES_CACHE, todoLists) =>
   function(req, res, next) {
     const { listid, itemid } = readParameters(req.body);
     const itemContent = todoLists
-      .getListByID(+listid)
-      .getItemById(+itemid)
+      .getListByID(listid)
+      .getItemById(itemid)
       .getContent();
 
     const content = insertListId(FILES_CACHE[EDIT_ITEM_PAGE_PATH], listid)
@@ -154,8 +154,8 @@ const createSaveItemHandler = (todoLists, fs) =>
   function(req, res, next) {
     const { itemid, listid, itemcontent } = readParameters(req.body);
     todoLists
-      .getListByID(+listid)
-      .getItemById(+itemid)
+      .getListByID(listid)
+      .getItemById(itemid)
       .setContent(itemcontent);
 
     saveToDoList(res, todoLists, fs);
@@ -164,7 +164,7 @@ const createSaveItemHandler = (todoLists, fs) =>
 const createEditListHandler = (FILES_CACHE, todoLists) =>
   function(req, res, next) {
     const { listid } = readParameters(req.body);
-    const targetList = todoLists.getListByID(+listid);
+    const targetList = todoLists.getListByID(listid);
     const listTitle = targetList.getTitle();
     const listDescription = targetList.getDescription();
 
@@ -178,9 +178,20 @@ const createEditListHandler = (FILES_CACHE, todoLists) =>
 const createSaveListHandler = (todoLists, fs) =>
   function(req, res, next) {
     const { listid, listtitle, listdescription } = readParameters(req.body);
-    const targetList = todoLists.getListByID(+listid);
+    const targetList = todoLists.getListByID(listid);
     targetList.setTitle(listtitle);
     targetList.setDescription(listdescription);
+    saveToDoList(res, todoLists, fs);
+  };
+
+const createStatusToggler = (todoLists, fs) =>
+  function(req, res, next) {
+    const { listid, itemid } = readParameters(req.body);
+    todoLists
+      .getListByID(listid)
+      .getItemById(itemid)
+      .toggleStatus();
+
     saveToDoList(res, todoLists, fs);
   };
 
@@ -199,5 +210,6 @@ module.exports = {
   createEditItemFormServer,
   createSaveItemHandler,
   createEditListHandler,
-  createSaveListHandler
+  createSaveListHandler,
+  createStatusToggler
 };
