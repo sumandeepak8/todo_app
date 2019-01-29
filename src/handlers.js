@@ -89,27 +89,11 @@ const insertListId = function(content, listId) {
   return content.replace(LIST_ID_PLACEHOLDER, listId);
 };
 
-const createAddItemsFormServer = FILES_CACHE =>
+const createAddItemHandler = (todoLists, fs) =>
   function(req, res, next) {
-    const parameters = getParametersFromUrl(req.url);
-    const { listid } = readParameters(parameters);
-    const content = insertListId(FILES_CACHE[ADD_ITEMS_PAGE_PATH], listid);
-    res.send(200, content, 'text/html');
-  };
-
-const separateListIdAndItems = function(itemsAndListId) {
-  const listID = +itemsAndListId.listid;
-  delete itemsAndListId.listid;
-  const itemContents = Object.values(itemsAndListId);
-  return { listID, itemContents };
-};
-
-const createAddItemsHandler = (todoLists, fs) =>
-  function(req, res, next) {
-    const itemsAndListId = readParameters(req.body);
-    const { listID, itemContents } = separateListIdAndItems(itemsAndListId);
-    const targetList = todoLists.getListByID(listID);
-    itemContents.forEach(content => targetList.addItem(content, false));
+    const { listid, itemcontent } = readParameters(req.body);
+    const targetList = todoLists.getListByID(listid);
+    targetList.addItem(itemcontent, false);
     saveToDoList(res, todoLists, fs);
   };
 
@@ -200,8 +184,7 @@ module.exports = {
   loadToDoLists,
   createAddListHandler,
   readPostBody,
-  createAddItemsFormServer,
-  createAddItemsHandler,
+  createAddItemHandler,
   createDeleteListHandler,
   createDeleteItemHandler,
   createEditItemFormServer,

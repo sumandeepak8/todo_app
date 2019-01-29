@@ -58,6 +58,16 @@ const getToDoItem = function(listId, todoItem) {
   return todoItemContainer;
 };
 
+const createAddItemForm = function(listId) {
+  const form = createForm('POST', '/additems');
+  const listIdField = createInputField('hidden', 'listid', listId);
+  const itemContentField = createInputField('text', 'itemcontent', '');
+  const addButton = createInputField('submit', '', 'Add Item');
+  const formElements = [listIdField, itemContentField, addButton];
+  appendChildren(form, formElements);
+  return form;
+};
+
 const getToDoList = function(todoList) {
   const listId = todoList.id;
   const listContainer = document.createElement('div');
@@ -66,14 +76,15 @@ const getToDoList = function(todoList) {
   const title = createHeading(1, todoList.title);
   const description = createHeading(3, todoList.description);
   const listSeparator = document.createElement('hr');
-  const addItemLink = createAnchor(`/additems?listid=${listId}`, 'Add Items');
+  // const addItemLink = createAnchor(`/additems?listid=${listId}`, 'Add Items');
+  const addItemForm = createAddItemForm(listId);
   const todoItems = todoList.items.map(getToDoItem.bind(null, listId));
   const listElements = [
     title,
     description,
+    addItemForm,
     editListForm,
-    deleteListForm,
-    addItemLink
+    deleteListForm
   ];
 
   appendChildren(listContainer, listElements);

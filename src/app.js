@@ -8,8 +8,7 @@ const {
   loadToDoLists,
   createAddListHandler,
   readPostBody,
-  createAddItemsFormServer,
-  createAddItemsHandler,
+  createAddItemHandler,
   createDeleteListHandler,
   createDeleteItemHandler,
   createEditItemFormServer,
@@ -26,8 +25,7 @@ const todoLists = loadToDoLists(FILES_CACHE);
 const serveFile = createFileServer(FILES_CACHE);
 const serveHomepage = createHomepageServer(FILES_CACHE);
 const addList = createAddListHandler(todoLists, fs);
-const serveAddItemsForm = createAddItemsFormServer(FILES_CACHE);
-const saveItems = createAddItemsHandler(todoLists, fs);
+const saveItems = createAddItemHandler(todoLists, fs);
 const deleteList = createDeleteListHandler(todoLists, fs);
 const deleteItem = createDeleteItemHandler(todoLists, fs);
 const serveEditItemForm = createEditItemFormServer(FILES_CACHE, todoLists);
@@ -42,7 +40,6 @@ app.use(readPostBody);
 app.get('/', serveHomepage);
 app.get('/todolists', serveToDoListsJSON);
 app.post('/addlist', addList);
-app.get(/^\/additems/, serveAddItemsForm);
 app.post('/additems', saveItems);
 app.post('/deletelist', deleteList);
 app.post('/deleteitem', deleteItem);
