@@ -76,7 +76,6 @@ const getToDoList = function(todoList) {
   const title = createHeading(1, todoList.title);
   const description = createHeading(3, todoList.description);
   const listSeparator = document.createElement('hr');
-  // const addItemLink = createAnchor(`/additems?listid=${listId}`, 'Add Items');
   const addItemForm = createAddItemForm(listId);
   const todoItems = todoList.items.map(getToDoItem.bind(null, listId));
   const listElements = [

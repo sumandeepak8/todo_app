@@ -12,7 +12,11 @@
   </head>
 
   <body>
-    <a href="/add_todo_list.html">ADD TODO List</a>
+    <form action="/addlist" method="post">
+      Title : <input type="text" name="title" /><br />
+      Description : <input type="text" name="description" /><br />
+      <input type="submit" value="ADD TODO LIST" />
+    </form>
     <h1>TODO Lists</h1>
     <div id="todo_lists"></div>
   </body>
