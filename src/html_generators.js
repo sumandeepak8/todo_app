@@ -1,31 +1,39 @@
-const getToDoItemHTML = function(listid, todoItem) {
+const itemManipulationForm = function(listId, itemId, action, buttonLabel) {
+  return `<form method="post" action="${action}" style="display:inline">
+  <input type='hidden' name='listid' value='${listId}'/>
+  <input type='hidden' name='itemid' value='${itemId}'/>
+  <input value="${buttonLabel}" type="submit"/> 
+  </form>`;
+};
+
+const listManipulationForm = function(listId, action, buttonLabel) {
+  return `<form method="post" action="${action}" style="display:inline">
+<input type='hidden' name='listid' value='${listId}'/>
+<input value="${buttonLabel}" type="submit"/> 
+</form>
+`;
+};
+
+const getToDoItemHTML = function(listId, todoItem) {
+  const itemId = todoItem.getId();
   return `<div>${todoItem.getContent()}
-  <form method="post" action="/edititem" style="display:inline">
-  <input type='hidden' name='listid' value='${listid}'/>
-  <input type='hidden' name='itemid' value='${todoItem.getId()}'/>
-  <input value="Edit" type="submit"/> 
-  </form>
-  <form method="post" action="/deleteitem" style="display:inline">
-    <input type='hidden' name='listid' value='${listid}'/>
-    <input type='hidden' name='itemid' value='${todoItem.getId()}'/>
-    <input value="Delete" type="submit"/> 
-    </form>
+  ${itemManipulationForm(listId, itemId, '/edititem', 'Edit')}
+  ${itemManipulationForm(listId, itemId, '/deleteitem', 'Delete')}
   </div>`;
 };
 
 const getToDoListHTML = function(todoList) {
+  const listId = todoList.getId();
   return `<div>
     <h1>${todoList.getTitle()}</h1>
     <h3>${todoList.getDescription()}</h3>
+    ${listManipulationForm(listId, '/editlist', 'Edit List')}
+    ${listManipulationForm(listId, '/deletelist', 'Delete List')}
+    <a href='/additems?listid=${listId}'>Add Items</a>
     ${todoList
       .getItems()
-      .map(getToDoItemHTML.bind(null, todoList.getId()))
+      .map(getToDoItemHTML.bind(null, listId))
       .join('')}
-    <a href='/additems?listid=${todoList.getId()}'>Add Items</a>
-    <form method="post" action="/deletelist">
-    <input type='hidden' name='listid' value='${todoList.getId()}'/>
-    <input value="Delete List" type="submit"/> 
-    </form>
       <hr>
   </div>`;
 };

@@ -13,7 +13,9 @@ const {
   createDeleteListHandler,
   createDeleteItemHandler,
   createEditItemFormServer,
-  createSaveItemHandler
+  createSaveItemHandler,
+  createEditListHandler,
+  createSaveListHandler
 } = require('./handlers');
 const app = new Sheeghra();
 
@@ -28,6 +30,8 @@ const deleteList = createDeleteListHandler(todoLists, fs);
 const deleteItem = createDeleteItemHandler(todoLists, fs);
 const serveEditItemForm = createEditItemFormServer(FILES_CACHE, todoLists);
 const saveEditedItem = createSaveItemHandler(todoLists, fs);
+const editlist = createEditListHandler(FILES_CACHE, todoLists);
+const saveList = createSaveListHandler(todoLists, fs);
 
 app.use(logRequest);
 app.use(readPostBody);
@@ -40,6 +44,8 @@ app.post('/deletelist', deleteList);
 app.post('/deleteitem', deleteItem);
 app.post('/edititem', serveEditItemForm);
 app.post('/saveitem', saveEditedItem);
+app.post('/editlist', editlist);
+app.post('/savelist', saveList);
 app.use(serveFile);
 
 module.exports = app.handleRequest.bind(app);

@@ -8,6 +8,9 @@ const EDIT_ITEM_PAGE_PATH = './public/edit_items.html';
 const ITEM_CONTENT_PLACEHOLDER = '____ITEM_CONTENT____';
 const ITEM_ID_PLACEHOLDER = '____ITEM_ID____';
 const ERROR_404 = 'Resource not found';
+const EDIT_LIST_PAGE_PATH = './public/edit_list.html';
+const LIST_DESCRIPTION_PLACEHOLDER = '____LIST_DESCRIPTION____';
+const LIST_TITLE_PLACEHOLDER = '____LIST_TITLE____';
 
 module.exports = {
   HOME_PAGE_PATH,
@@ -19,5 +22,8 @@ module.exports = {
   ERROR_404,
   EDIT_ITEM_PAGE_PATH,
   ITEM_CONTENT_PLACEHOLDER,
-  ITEM_ID_PLACEHOLDER
+  ITEM_ID_PLACEHOLDER,
+  EDIT_LIST_PAGE_PATH,
+  LIST_DESCRIPTION_PLACEHOLDER,
+  LIST_TITLE_PLACEHOLDER
 };

@@ -25,6 +25,14 @@ class TODOList {
     return this.title;
   }
 
+  setTitle(title) {
+    this.title = title;
+  }
+
+  setDescription(description) {
+    this.description = description;
+  }
+
   getDescription() {
     return this.description;
   }
