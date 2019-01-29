@@ -1,5 +1,4 @@
 const TODOLists = require('./entities/todo_lists');
-const getToDoListsHTML = require('./html_generators');
 const {
   saveToDoList,
   readParameters,
@@ -10,7 +9,6 @@ const { readDirectory } = require('./utils/file');
 
 const {
   HOME_PAGE_PATH,
-  TODO_LISTS_PLACEHOLDER,
   TODO_LISTS_PATH,
   LIST_ID_PLACEHOLDER,
   ADD_ITEMS_PAGE_PATH,
@@ -55,6 +53,11 @@ const logRequest = function(req, res, next) {
   next();
 };
 
+const createHomepageServer = FILES_CACHE =>
+  function(req, res, next) {
+    res.send(200, FILES_CACHE[HOME_PAGE_PATH], 'text/html');
+  };
+
 const createFileServer = FILES_CACHE =>
   function(req, res, next) {
     const filePath = PUBLIC_DIRECTORY + req.url;
@@ -64,17 +67,6 @@ const createFileServer = FILES_CACHE =>
       return;
     }
     res.send(200, content, 'text/html');
-  };
-
-const createDashboardServer = (FILES_CACHE, todoLists) =>
-  function(req, res, next) {
-    const todoListsHTML = getToDoListsHTML(todoLists);
-    const dashboardHMTL = FILES_CACHE[HOME_PAGE_PATH].replace(
-      TODO_LISTS_PLACEHOLDER,
-      todoListsHTML
-    );
-
-    res.send(200, dashboardHMTL, 'text/html');
   };
 
 const createAddListHandler = (todoLists, fs) =>
@@ -195,10 +187,15 @@ const createStatusToggler = (todoLists, fs) =>
     saveToDoList(res, todoLists, fs);
   };
 
+const createToDoListsJSONServer = todoLists =>
+  function(req, res, next) {
+    res.send(200, JSON.stringify(todoLists), 'application/json');
+  };
+
 module.exports = {
   logRequest,
   createFileServer,
-  createDashboardServer,
+  createHomepageServer,
   initializeServerCache,
   loadToDoLists,
   createAddListHandler,
@@ -211,5 +208,6 @@ module.exports = {
   createSaveItemHandler,
   createEditListHandler,
   createSaveListHandler,
-  createStatusToggler
+  createStatusToggler,
+  createToDoListsJSONServer
 };

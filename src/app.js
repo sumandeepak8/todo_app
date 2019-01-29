@@ -3,7 +3,7 @@ const fs = require('fs');
 const {
   logRequest,
   createFileServer,
-  createDashboardServer,
+  createHomepageServer,
   initializeServerCache,
   loadToDoLists,
   createAddListHandler,
@@ -17,14 +17,14 @@ const {
   createEditListHandler,
   createSaveListHandler,
   createStatusToggler,
-  createMarkAsUndoneHandler
+  createToDoListsJSONServer
 } = require('./handlers');
 const app = new Sheeghra();
 
 const FILES_CACHE = initializeServerCache(fs);
 const todoLists = loadToDoLists(FILES_CACHE);
 const serveFile = createFileServer(FILES_CACHE);
-const serveDashboard = createDashboardServer(FILES_CACHE, todoLists);
+const serveHomepage = createHomepageServer(FILES_CACHE);
 const addList = createAddListHandler(todoLists, fs);
 const serveAddItemsForm = createAddItemsFormServer(FILES_CACHE);
 const saveItems = createAddItemsHandler(todoLists, fs);
@@ -35,11 +35,12 @@ const saveEditedItem = createSaveItemHandler(todoLists, fs);
 const editlist = createEditListHandler(FILES_CACHE, todoLists);
 const saveList = createSaveListHandler(todoLists, fs);
 const toggleStatus = createStatusToggler(todoLists, fs);
+const serveToDoListsJSON = createToDoListsJSONServer(todoLists);
 
 app.use(logRequest);
 app.use(readPostBody);
-app.get('/', serveDashboard);
-app.get('/index.html', serveDashboard);
+app.get('/', serveHomepage);
+app.get('/todolists', serveToDoListsJSON);
 app.post('/addlist', addList);
 app.get(/^\/additems/, serveAddItemsForm);
 app.post('/additems', saveItems);
