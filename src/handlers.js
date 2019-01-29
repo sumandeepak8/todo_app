@@ -1,9 +1,5 @@
 const TODOLists = require('./entities/todo_lists');
-const {
-  saveToDoList,
-  readParameters,
-  getParametersFromUrl
-} = require('./handler_utils');
+const { saveToDoList, readParameters } = require('./handler_utils');
 
 const { readDirectory } = require('./utils/file');
 
@@ -11,7 +7,6 @@ const {
   HOME_PAGE_PATH,
   TODO_LISTS_PATH,
   LIST_ID_PLACEHOLDER,
-  ADD_ITEMS_PAGE_PATH,
   ERROR_404,
   EDIT_ITEM_PAGE_PATH,
   ITEM_CONTENT_PLACEHOLDER,
