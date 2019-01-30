@@ -1,4 +1,4 @@
-const { TODO_LISTS_PATH } = require('./constants');
+const { USERS_DATA_PATH } = require('./constants');
 
 const splitKeyValue = pair => pair.split('=');
 
@@ -7,23 +7,35 @@ const assignKeyValue = (parameters, [key, value]) => {
   return parameters;
 };
 
-const readParameters = requestBody => {
-  return requestBody
-    .split('&')
+const readParameters = (text, separator) => {
+  return text
+    .split(separator)
     .map(splitKeyValue)
     .reduce(assignKeyValue, {});
 };
 
-const saveToDoList = function(res, todoLists, fs) {
-  const todoListsJSON = JSON.stringify(todoLists);
-  fs.writeFile(TODO_LISTS_PATH, todoListsJSON, err => {
+const saveToDoList = function(res, users, fs) {
+  const usersJSON = JSON.stringify(users.getAllUsers());
+  fs.writeFile(USERS_DATA_PATH, usersJSON, err => {
     if (err) {
       res.send(500, 'Internal Server Error', 'text/plain');
       return;
     }
-    res.redirect('/');
+    res.redirect('/dashboard.html');
   });
 };
+
+const createSessionWriter = (sessions, fs, res) =>
+  function(sessionId, username) {
+    sessions[sessionId] = username;
+    const sessionsJSON = JSON.stringify(sessions);
+
+    fs.writeFile('./data/sessions.json', sessionsJSON, err => {
+      if (err) res.send(500, 'Internal Server Error', 'text/plain');
+      res.setHeader('Set-Cookie', `sessionId=${sessionId}`);
+      res.redirect('./dashboard.html');
+    });
+  };
 
 const getParametersFromUrl = function(url) {
   return url.split('?')[1];
@@ -32,5 +44,6 @@ const getParametersFromUrl = function(url) {
 module.exports = {
   saveToDoList,
   readParameters,
-  getParametersFromUrl
+  getParametersFromUrl,
+  createSessionWriter
 };

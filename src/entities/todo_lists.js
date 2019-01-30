@@ -11,15 +11,9 @@ class TODOLists {
     return new TODOLists(todoLists, latestListID);
   }
 
-  addTODOList(title, description, items) {
+  addTODOList(title, description) {
     this.latestListID = this.latestListID + 1;
-    const todoList = new TODOList(
-      this.latestListID,
-      title,
-      description,
-      items,
-      0
-    );
+    const todoList = new TODOList(this.latestListID, title, description, [], 0);
     this.lists.push(todoList);
   }
 

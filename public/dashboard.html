@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Home</title>
+    <style>
+      body {
+        text-align: center;
+      }
+    </style>
+    <script src="/javascript/utils/html_elements.js"></script>
+    <script src="/javascript/main.js"></script>
+  </head>
+
+  <body>
+    <form action="/addlist" method="post">
+      Title : <input type="text" name="title" /><br />
+      Description : <input type="text" name="description" /><br />
+      <input type="submit" value="ADD TODO LIST" />
+    </form>
+    <h1>TODO Lists</h1>
+    <div id="todo_lists"></div>
+  </body>
+</html>

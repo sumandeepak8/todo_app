@@ -1,7 +1,7 @@
 const TODOItem = require('./todo_item');
 
 class TODOList {
-  constructor(id, title, description, items, initialID) {
+  constructor(id, title, description, items = [], initialID = 0) {
     this.id = id;
     this.title = title;
     this.description = description;
@@ -15,9 +15,9 @@ class TODOList {
     return new TODOList(id, title, description, todoItems, latestItemID);
   }
 
-  addItem(content, done) {
+  addItem(content) {
     this.latestItemID = this.latestItemID + 1;
-    const todoItem = new TODOItem(this.latestItemID, content, done);
+    const todoItem = new TODOItem(this.latestItemID, content, false);
     this.items.push(todoItem);
   }
 

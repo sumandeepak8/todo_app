@@ -1,7 +1,7 @@
 const HOME_PAGE_PATH = './public/index.html';
 const ENCODING_UTF8 = 'utf-8';
 const TODO_LISTS_PLACEHOLDER = '____TODO_LISTS____';
-const TODO_LISTS_PATH = './data/todo_lists.json';
+const USERS_DATA_PATH = './data/users.json';
 const LIST_ID_PLACEHOLDER = '____LIST_ID____';
 const EDIT_ITEM_PAGE_PATH = './public/edit_items.html';
 const ITEM_CONTENT_PLACEHOLDER = '____ITEM_CONTENT____';
@@ -18,7 +18,7 @@ module.exports = {
   HOME_PAGE_PATH,
   ENCODING_UTF8,
   TODO_LISTS_PLACEHOLDER,
-  TODO_LISTS_PATH,
+  USERS_DATA_PATH,
   LIST_ID_PLACEHOLDER,
   ERROR_404,
   EDIT_ITEM_PAGE_PATH,

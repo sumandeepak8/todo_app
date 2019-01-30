@@ -1,23 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Home</title>
-    <style>
-      body {
-        text-align: center;
-      }
-    </style>
-    <script src="/javascript/utils/html_elements.js"></script>
-    <script src="/javascript/main.js"></script>
+    <title>Login Page</title>
   </head>
-
   <body>
-    <form action="/addlist" method="post">
-      Title : <input type="text" name="title" /><br />
-      Description : <input type="text" name="description" /><br />
-      <input type="submit" value="ADD TODO LIST" />
+    <form action="/login" method="post">
+      <input type="text" name="username" placeholder="Username" />
+      <input type="password" name="password" placeholder="Password" />
+      <input type="submit" value="Login" />
     </form>
-    <h1>TODO Lists</h1>
-    <div id="todo_lists"></div>
   </body>
 </html>
