@@ -25,16 +25,18 @@ const saveToDoList = function(res, users, fs) {
   });
 };
 
-const createSessionWriter = (sessions, fs, res) =>
+const saveSessions = function(sessionsJSON, res, fs) {
+  fs.writeFile('./data/sessions.json', sessionsJSON, err => {
+    if (err) res.send(500, 'Internal Server Error', 'text/plain');
+    res.redirect('./dashboard.html');
+  });
+};
+
+const createSessionAdder = (sessions, fs, res) =>
   function(sessionId, username) {
     sessions[sessionId] = username;
     const sessionsJSON = JSON.stringify(sessions);
-
-    fs.writeFile('./data/sessions.json', sessionsJSON, err => {
-      if (err) res.send(500, 'Internal Server Error', 'text/plain');
-      res.setHeader('Set-Cookie', `sessionId=${sessionId}`);
-      res.redirect('./dashboard.html');
-    });
+    saveSessions(sessionsJSON, res, fs);
   };
 
 const getParametersFromUrl = function(url) {
@@ -45,5 +47,6 @@ module.exports = {
   saveToDoList,
   readParameters,
   getParametersFromUrl,
-  createSessionWriter
+  createSessionAdder,
+  saveSessions
 };

@@ -20,7 +20,8 @@ const {
   readCookies,
   createSessionValidator,
   loadSessions,
-  createLoginHandler
+  createLoginHandler,
+  createLogoutHandler
 } = require('./handlers');
 const app = new Sheeghra();
 
@@ -41,6 +42,7 @@ const toggleStatus = createStatusToggler(users, sessions, fs);
 const serveToDoListsJSON = createToDoListsJSONServer(users, sessions);
 const validateSession = createSessionValidator(sessions);
 const handleLogin = createLoginHandler(sessions, users, fs);
+const handleLogout = createLogoutHandler(sessions, fs);
 
 app.use(logRequest);
 app.use(readPostBody);
@@ -58,6 +60,7 @@ app.post('/saveediteditem', saveEditedItem);
 app.post('/editlist', editlist);
 app.post('/saveeditedlist', saveList);
 app.post('/togglestatus', toggleStatus);
+app.post('/logout', handleLogout);
 app.use(serveFile);
 
 module.exports = app.handleRequest.bind(app);

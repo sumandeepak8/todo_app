@@ -2,7 +2,8 @@ const Users = require('./entities/users');
 const {
   saveToDoList,
   readParameters,
-  createSessionWriter
+  createSessionAdder,
+  saveSessions
 } = require('./handler_utils');
 const { readDirectory } = require('./utils/file');
 
@@ -216,7 +217,7 @@ const isUserLoggedIn = function(sessionId, sessions) {
 const createSessionValidator = sessions =>
   function(req, res, next) {
     const { sessionId } = req.cookies;
-    if (req.url == '/' || req.url == '/login') {
+    if (req.url == '/' || req.url == '/login' || req.url == '/index.html') {
       if (isUserLoggedIn(sessionId, sessions)) {
         res.redirect('/dashboard.html');
         return;
@@ -239,8 +240,19 @@ const createLoginHandler = (sessions, users, fs) =>
       return;
     }
     const sessionId = Date.now();
-    const writeSession = createSessionWriter(sessions, fs, res);
-    writeSession(sessionId, username);
+    res.setHeader('Set-Cookie', `sessionId=${sessionId};`);
+    const addSession = createSessionAdder(sessions, fs, res);
+    addSession(sessionId, username);
+  };
+
+const createLogoutHandler = (sessions, fs) =>
+  function(req, res, next) {
+    const sessionId = req.cookies.sessionId;
+    delete sessions[sessionId];
+    const sessionsJSON = JSON.stringify(sessions);
+    const expiryDate = new Date(Date.now()).toGMTString();
+    res.setHeader('Set-Cookie', `sessionId=deleted; expires=${expiryDate}`);
+    saveSessions(sessionsJSON, res, fs);
   };
 
 module.exports = {
@@ -263,5 +275,6 @@ module.exports = {
   readCookies,
   createSessionValidator,
   loadSessions,
-  createLoginHandler
+  createLoginHandler,
+  createLogoutHandler
 };
