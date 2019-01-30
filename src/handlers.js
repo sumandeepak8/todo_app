@@ -217,7 +217,8 @@ const isUserLoggedIn = function(sessionId, sessions) {
 const createSessionValidator = sessions =>
   function(req, res, next) {
     const { sessionId } = req.cookies;
-    if (req.url == '/' || req.url == '/login' || req.url == '/index.html') {
+    const unrestrictedUrls = ['/', '/login', '/index.html'];
+    if (unrestrictedUrls.includes(req.url)) {
       if (isUserLoggedIn(sessionId, sessions)) {
         res.redirect('/dashboard.html');
         return;
