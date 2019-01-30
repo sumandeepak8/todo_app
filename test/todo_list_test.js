@@ -3,10 +3,11 @@ const TODOItem = require('../src/entities/todo_item');
 const expect = require('chai').expect;
 
 describe('TODOList', function() {
+  const item1 = new TODOItem(1, 'one', false);
+  const item2 = new TODOItem(2, 'two', false);
+  const item3 = new TODOItem(3, 'three', false);
+
   it('addItem : should add new item to TODO List', function() {
-    const item1 = new TODOItem(1, 'one', false);
-    const item2 = new TODOItem(2, 'two', false);
-    const item3 = new TODOItem(3, 'three', false);
     const todoList = new TODOList(
       1,
       'first list',
@@ -28,20 +29,23 @@ describe('TODOList', function() {
       ]
     };
     const todoList = TODOList.parse(todoListData);
-    expect(todoList)
+    expect(todoList).to.be.a.instanceOf(TODOList);
+  });
+
+  it('getItemById: should return a todo item of specified id', function() {
+    const items = [item1, item2, item3];
+    const todoList = new TODOList(1, 'title', 'description', items);
+    const todoItemOfID1 = todoList.getItemById(1);
+    expect(todoItemOfID1)
       .to.have.property('id')
-      .equal(1);
+      .to.equal(1);
+  });
 
-    expect(todoList)
-      .to.have.property('title')
-      .equal('title');
-
-    expect(todoList)
-      .to.have.property('description')
-      .equal('this is a list');
-
-    expect(todoList)
-      .to.have.property('items')
-      .lengthOf(2);
+  it('deleteItemById: should delete a todo item of specified id', function() {
+    const items = [item1, item2, item3];
+    const todoList = new TODOList(1, 'title', 'description', items);
+    todoList.deleteItem(1);
+    const todoItemOfID1 = todoList.getItemById(1);
+    expect(todoItemOfID1).to.be.undefined;
   });
 });
