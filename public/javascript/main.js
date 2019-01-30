@@ -34,7 +34,7 @@ const getToDoItem = function(listId, todoItem) {
   itemInfoContainer.innerText = `${todoItem.content}`;
 
   const editItemForm = createItemEditor(listId, itemId, '/edititem', 'Edit');
-  const saveItemForm = createItemEditor(
+  const deleteItemForm = createItemEditor(
     listId,
     itemId,
     '/deleteitem',
@@ -50,7 +50,7 @@ const getToDoItem = function(listId, todoItem) {
   const todoItemElements = [
     itemInfoContainer,
     editItemForm,
-    saveItemForm,
+    deleteItemForm,
     toggleStatusForm
   ];
   appendChildren(todoItemContainer, todoItemElements);
@@ -59,7 +59,7 @@ const getToDoItem = function(listId, todoItem) {
 };
 
 const createAddItemForm = function(listId) {
-  const form = createForm('POST', '/additems');
+  const form = createForm('POST', '/additem');
   const listIdField = createInputField('hidden', 'listid', listId);
   const itemContentField = createInputField('text', 'itemcontent', '');
   const addButton = createInputField('submit', '', 'Add Item');
@@ -71,13 +71,13 @@ const createAddItemForm = function(listId) {
 const getToDoList = function(todoList) {
   const listId = todoList.id;
   const listContainer = document.createElement('div');
-  const editListForm = createListEditor(listId, '/editlist', 'Edit List');
-  const deleteListForm = createListEditor(listId, '/deletelist', 'Delete List');
   const title = createHeading(1, todoList.title);
   const description = createHeading(3, todoList.description);
-  const listSeparator = document.createElement('hr');
   const addItemForm = createAddItemForm(listId);
+  const editListForm = createListEditor(listId, '/editlist', 'Edit List');
+  const deleteListForm = createListEditor(listId, '/deletelist', 'Delete List');
   const todoItems = todoList.items.map(getToDoItem.bind(null, listId));
+  const listSeparator = document.createElement('hr');
   const listElements = [
     title,
     description,
