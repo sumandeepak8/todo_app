@@ -40,7 +40,8 @@ const getUsername = function(sessionId, sessions) {
 const initializeDataDirectory = function(fs) {
   if (!fs.existsSync(DATA_DIRECTORY)) {
     fs.mkdirSync(DATA_DIRECTORY);
-    fs.writeFileSync(USERS_DATA_PATH, DEFAULT_TODO_LISTS_JSON);
+    fs.writeFileSync(USERS_DATA_PATH, '{}');
+    fs.writeFileSync(SESSIONS_DATA_PATH, '{}');
   }
 };
 
