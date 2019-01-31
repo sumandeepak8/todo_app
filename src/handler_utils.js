@@ -14,25 +14,23 @@ const readParameters = (text, separator) => {
     .reduce(assignKeyValue, {});
 };
 
+const redirectIfNoError = (res, location) => err => {
+  if (err) {
+    res.send(500, 'Internal Server Error');
+    return;
+  }
+  res.redirect(location);
+};
+
 const saveToDoList = function(res, users, fs) {
   const usersJSON = JSON.stringify(users.getAllUsers());
-  fs.writeFile(USERS_DATA_PATH, usersJSON, err => {
-    if (err) {
-      res.send(500, 'Internal Server Error');
-      return;
-    }
-    res.redirect('/dashboard.html');
-  });
+  const redirectToDashboard = redirectIfNoError(res, '/dashboard.html');
+  fs.writeFile(USERS_DATA_PATH, usersJSON, redirectToDashboard);
 };
 
 const saveSessions = function(sessionsJSON, res, fs) {
-  fs.writeFile('./data/sessions.json', sessionsJSON, err => {
-    if (err) {
-      res.send(500, 'Internal Server Error');
-      return;
-    }
-    res.redirect('./dashboard.html');
-  });
+  const redirectToDashboard = redirectIfNoError(res, '/dashboard.html');
+  fs.writeFile('./data/sessions.json', sessionsJSON, redirectToDashboard);
 };
 
 const createSessionAdder = (sessions, fs, res) =>

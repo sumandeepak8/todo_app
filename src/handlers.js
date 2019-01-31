@@ -61,7 +61,7 @@ const logRequest = function(req, res, next) {
   next();
 };
 
-const createHomepageServer = (FILES_CACHE) =>
+const createHomepageServer = FILES_CACHE =>
   function(req, res, next) {
     res.send(200, FILES_CACHE[HOME_PAGE_PATH], resolveMIMEType('html'));
   };
