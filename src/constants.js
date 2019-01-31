@@ -13,6 +13,7 @@ const LIST_TITLE_PLACEHOLDER = '____LIST_TITLE____';
 const DATA_DIRECTORY = './data';
 const PUBLIC_DIRECTORY = './public';
 const DEFAULT_TODO_LISTS_JSON = '{"lists":[], "latestListID":0}';
+const SESSIONS_DATA_PATH = './data/sessions.json';
 const MIME_TEXT_PLAIN = 'text/plain';
 const MIME_TYPES = {
   css: 'text/css',
@@ -47,5 +48,6 @@ module.exports = {
   PUBLIC_DIRECTORY,
   DEFAULT_TODO_LISTS_JSON,
   MIME_TYPES,
-  MIME_TEXT_PLAIN
+  MIME_TEXT_PLAIN,
+  SESSIONS_DATA_PATH
 };

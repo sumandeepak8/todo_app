@@ -1,9 +1,8 @@
 const Users = require('./entities/users');
 const {
-  saveUsers,
+  writeToFile,
   readParameters,
   createSessionAdder,
-  saveSessions,
   resolveMIMEType
 } = require('./handler_utils');
 const { readDirectory, getFileExtension } = require('./utils/file');
@@ -21,7 +20,8 @@ const {
   LIST_TITLE_PLACEHOLDER,
   DATA_DIRECTORY,
   PUBLIC_DIRECTORY,
-  DEFAULT_TODO_LISTS_JSON
+  DEFAULT_TODO_LISTS_JSON,
+  SESSIONS_DATA_PATH
 } = require('./constants');
 
 const loadUsers = function(FILES_CACHE) {
@@ -83,7 +83,7 @@ const createAddListHandler = (users, sessions, fs) =>
     let { title, description } = readParameters(req.body, '&');
     const username = getUsername(req.cookies.sessionId, sessions);
     users.getTodoLists(username).addTODOList(title, description);
-    saveUsers(res, users, fs);
+    writeToFile(res, users.getAllUsers(), USERS_DATA_PATH, fs);
   };
 
 const readPostBody = function(req, res, next) {
@@ -105,7 +105,7 @@ const createAddItemHandler = (users, sessions, fs) =>
     const username = getUsername(req.cookies.sessionId, sessions);
     const targetList = users.getTodoLists(username).getListByID(listid);
     targetList.addItem(itemcontent);
-    saveUsers(res, users, fs);
+    writeToFile(res, users.getAllUsers(), USERS_DATA_PATH, fs);
   };
 
 const createDeleteListHandler = (users, sessions, fs) =>
@@ -113,7 +113,7 @@ const createDeleteListHandler = (users, sessions, fs) =>
     const listid = +readParameters(req.body, '&').listid;
     const username = getUsername(req.cookies.sessionId, sessions);
     users.getTodoLists(username).deleteListByID(listid);
-    saveUsers(res, users, fs);
+    writeToFile(res, users.getAllUsers(), USERS_DATA_PATH, fs);
   };
 
 const createDeleteItemHandler = (users, sessions, fs) =>
@@ -124,7 +124,7 @@ const createDeleteItemHandler = (users, sessions, fs) =>
       .getTodoLists(username)
       .getListByID(listid)
       .deleteItem(itemid);
-    saveUsers(res, users, fs);
+    writeToFile(res, users.getAllUsers(), USERS_DATA_PATH, fs);
   };
 
 const createEditItemFormServer = (FILES_CACHE, sessions, users) =>
@@ -154,7 +154,7 @@ const createSaveItemHandler = (users, sessions, fs) =>
       .getItemById(itemid)
       .setContent(itemcontent);
 
-    saveUsers(res, users, fs);
+    writeToFile(res, users.getAllUsers(), USERS_DATA_PATH, fs);
   };
 
 const createEditListHandler = (FILES_CACHE, sessions, users) =>
@@ -182,7 +182,7 @@ const createSaveListHandler = (users, sessions, fs) =>
     const targetList = users.getTodoLists(username).getListByID(listid);
     targetList.setTitle(listtitle);
     targetList.setDescription(listdescription);
-    saveUsers(res, users, fs);
+    writeToFile(res, users.getAllUsers(), USERS_DATA_PATH, fs);
   };
 
 const createStatusToggler = (users, sessions, fs) =>
@@ -195,7 +195,7 @@ const createStatusToggler = (users, sessions, fs) =>
       .getItemById(itemid)
       .toggleStatus();
 
-    saveUsers(res, users, fs);
+    writeToFile(res, users.getAllUsers(), USERS_DATA_PATH, fs);
   };
 
 const createToDoListsJSONServer = (users, sessions) =>
@@ -255,10 +255,9 @@ const createLogoutHandler = (sessions, fs) =>
   function(req, res, next) {
     const sessionId = req.cookies.sessionId;
     delete sessions[sessionId];
-    const sessionsJSON = JSON.stringify(sessions);
     const expiryDate = new Date(Date.now()).toGMTString();
     res.setHeader('Set-Cookie', `sessionId=deleted; expires=${expiryDate}`);
-    saveSessions(sessionsJSON, res, fs);
+    writeToFile(res, sessions, SESSIONS_DATA_PATH, fs);
   };
 
 module.exports = {

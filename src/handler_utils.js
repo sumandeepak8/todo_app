@@ -1,4 +1,8 @@
-const { USERS_DATA_PATH, MIME_TEXT_PLAIN, MIME_TYPES } = require('./constants');
+const {
+  SESSIONS_DATA_PATH,
+  MIME_TEXT_PLAIN,
+  MIME_TYPES
+} = require('./constants');
 
 const splitKeyValue = pair => pair.split('=');
 
@@ -22,22 +26,16 @@ const redirectIfNoError = (res, location) => err => {
   res.redirect(location);
 };
 
-const saveUsers = function(res, users, fs) {
-  const usersJSON = JSON.stringify(users.getAllUsers());
+const writeToFile = function(res, data, filePath, fs) {
+  const dataJSON = JSON.stringify(data);
   const redirectToDashboard = redirectIfNoError(res, '/dashboard.html');
-  fs.writeFile(USERS_DATA_PATH, usersJSON, redirectToDashboard);
-};
-
-const saveSessions = function(sessionsJSON, res, fs) {
-  const redirectToDashboard = redirectIfNoError(res, '/dashboard.html');
-  fs.writeFile('./data/sessions.json', sessionsJSON, redirectToDashboard);
+  fs.writeFile(filePath, dataJSON, redirectToDashboard);
 };
 
 const createSessionAdder = (sessions, fs, res) =>
   function(sessionId, username) {
     sessions[sessionId] = username;
-    const sessionsJSON = JSON.stringify(sessions);
-    saveSessions(sessionsJSON, res, fs);
+    writeToFile(res, sessions, SESSIONS_DATA_PATH, fs);
   };
 
 const getParametersFromUrl = function(url) {
@@ -49,10 +47,9 @@ const resolveMIMEType = function(fileExtension) {
 };
 
 module.exports = {
-  saveUsers,
   readParameters,
   getParametersFromUrl,
   createSessionAdder,
-  saveSessions,
-  resolveMIMEType
+  resolveMIMEType,
+  writeToFile
 };
