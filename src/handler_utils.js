@@ -1,4 +1,4 @@
-const { USERS_DATA_PATH } = require('./constants');
+const { USERS_DATA_PATH, MIME_TEXT_PLAIN, MIME_TYPES } = require('./constants');
 
 const splitKeyValue = pair => pair.split('=');
 
@@ -18,7 +18,7 @@ const saveToDoList = function(res, users, fs) {
   const usersJSON = JSON.stringify(users.getAllUsers());
   fs.writeFile(USERS_DATA_PATH, usersJSON, err => {
     if (err) {
-      res.send(500, 'Internal Server Error', 'text/plain');
+      res.send(500, 'Internal Server Error');
       return;
     }
     res.redirect('/dashboard.html');
@@ -27,7 +27,10 @@ const saveToDoList = function(res, users, fs) {
 
 const saveSessions = function(sessionsJSON, res, fs) {
   fs.writeFile('./data/sessions.json', sessionsJSON, err => {
-    if (err) res.send(500, 'Internal Server Error', 'text/plain');
+    if (err) {
+      res.send(500, 'Internal Server Error');
+      return;
+    }
     res.redirect('./dashboard.html');
   });
 };
@@ -43,10 +46,15 @@ const getParametersFromUrl = function(url) {
   return url.split('?')[1];
 };
 
+const resolveMIMEType = function(fileExtension) {
+  return MIME_TYPES[fileExtension] || MIME_TEXT_PLAIN;
+};
+
 module.exports = {
   saveToDoList,
   readParameters,
   getParametersFromUrl,
   createSessionAdder,
-  saveSessions
+  saveSessions,
+  resolveMIMEType
 };

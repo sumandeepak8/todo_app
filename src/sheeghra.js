@@ -5,7 +5,7 @@ const isMatching = (req, route) => {
   return true;
 };
 
-const send = function(statusCode, content, contentType) {
+const send = function(statusCode, content, contentType = 'text/plain') {
   this.statusCode = statusCode;
   this.setHeader('Content-Type', contentType);
   this.write(content);

@@ -12,4 +12,8 @@ const readDirectory = function(directoryPath, fs, files = {}) {
   return files;
 };
 
-module.exports = { readDirectory };
+const getFileExtension = function(fileName) {
+  return fileName.split('.').pop();
+};
+
+module.exports = { readDirectory, getFileExtension };

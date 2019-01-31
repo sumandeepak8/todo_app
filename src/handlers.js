@@ -3,9 +3,10 @@ const {
   saveToDoList,
   readParameters,
   createSessionAdder,
-  saveSessions
+  saveSessions,
+  resolveMIMEType
 } = require('./handler_utils');
-const { readDirectory } = require('./utils/file');
+const { readDirectory, getFileExtension } = require('./utils/file');
 
 const {
   HOME_PAGE_PATH,
@@ -62,18 +63,19 @@ const logRequest = function(req, res, next) {
 
 const createHomepageServer = FILES_CACHE =>
   function(req, res, next) {
-    res.send(200, FILES_CACHE[HOME_PAGE_PATH], 'text/html');
+    res.send(200, FILES_CACHE[HOME_PAGE_PATH], resolveMIMEType('html'));
   };
 
 const createFileServer = FILES_CACHE =>
   function(req, res, next) {
     const filePath = PUBLIC_DIRECTORY + req.url;
+    const fileExtension = getFileExtension(filePath);
     const content = FILES_CACHE[filePath];
     if (content == undefined) {
-      res.send(404, ERROR_404, 'text/plain');
+      res.send(404, ERROR_404);
       return;
     }
-    res.send(200, content, 'text/html');
+    res.send(200, content, resolveMIMEType(fileExtension));
   };
 
 const createAddListHandler = (users, sessions, fs) =>
@@ -200,7 +202,7 @@ const createToDoListsJSONServer = (users, sessions) =>
   function(req, res, next) {
     const username = getUsername(req.cookies.sessionId, sessions);
     const todoListsJSON = JSON.stringify(users.getTodoLists(username));
-    res.send(200, todoListsJSON, 'application/json');
+    res.send(200, todoListsJSON, resolveMIMEType('json'));
   };
 
 const readCookies = function(req, res, next) {

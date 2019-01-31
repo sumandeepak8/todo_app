@@ -13,6 +13,22 @@ const LIST_TITLE_PLACEHOLDER = '____LIST_TITLE____';
 const DATA_DIRECTORY = './data';
 const PUBLIC_DIRECTORY = './public';
 const DEFAULT_TODO_LISTS_JSON = '{"lists":[], "latestListID":0}';
+const MIME_TEXT_PLAIN = 'text/plain';
+const MIME_TYPES = {
+  css: 'text/css',
+  html: 'text/html',
+  js: 'text/javascript',
+  csv: 'text/csv',
+  gif: 'image/gif',
+  htm: 'text/html',
+  html: 'text/html',
+  jpg: 'image/jpeg',
+  jpeg: 'image/jpeg',
+  json: 'application/json',
+  png: 'image/png',
+  xml: 'text/xml',
+  pdf: 'application/pdf'
+};
 
 module.exports = {
   HOME_PAGE_PATH,
@@ -29,5 +45,7 @@ module.exports = {
   LIST_TITLE_PLACEHOLDER,
   DATA_DIRECTORY,
   PUBLIC_DIRECTORY,
-  DEFAULT_TODO_LISTS_JSON
+  DEFAULT_TODO_LISTS_JSON,
+  MIME_TYPES,
+  MIME_TEXT_PLAIN
 };

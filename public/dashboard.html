@@ -2,25 +2,27 @@
 <html>
   <head>
     <title>Home</title>
-    <style>
-      body {
-        text-align: center;
-      }
-    </style>
+    <link rel="stylesheet" type="text/css" href="/main.css" />
     <script src="/javascript/utils/html_elements.js"></script>
     <script src="/javascript/main.js"></script>
   </head>
 
   <body>
-    <form action="/addlist" method="post">
-      Title : <input type="text" name="title" /><br />
-      Description : <input type="text" name="description" /><br />
-      <input type="submit" value="ADD TODO LIST" />
-    </form>
-    <h1>TODO Lists</h1>
+    <div id="logout_div">
+      <form action="/logout" method="post">
+        <input type="submit" value="logout" />
+      </form>
+    </div>
+    <h1 id="heading">TODO Lists</h1>
+    <div id="lists">
+      <h3>To add new TODO List</h3>
+      <form action="/addlist" method="post">
+        <input type="text" name="title" placeholder="Title" /><br />
+        <input type="text" name="description" placeholder="Description" /><br />
+        <input type="submit" value="ADD TODO LIST" />
+      </form>
+    </div>
+    <hr />
     <div id="todo_lists"></div>
-    <form action="/logout" method="post">
-      <input type="submit" value="logout" />
-    </form>
   </body>
 </html>
