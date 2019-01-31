@@ -30,7 +30,7 @@ const loadUsers = function(FILES_CACHE) {
 };
 
 const loadSessions = function(FILES_CACHE) {
-  return JSON.parse(FILES_CACHE['./data/sessions.json']);
+  return JSON.parse(FILES_CACHE[SESSIONS_DATA_PATH]);
 };
 
 const getUsername = function(sessionId, sessions) {

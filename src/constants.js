@@ -14,6 +14,7 @@ const DATA_DIRECTORY = './data';
 const PUBLIC_DIRECTORY = './public';
 const DEFAULT_TODO_LISTS_JSON = '{"lists":[], "latestListID":0}';
 const SESSIONS_DATA_PATH = './data/sessions.json';
+const ERROR_500_MSG = 'Internal Server Error';
 const MIME_TEXT_PLAIN = 'text/plain';
 const MIME_TYPES = {
   css: 'text/css',
@@ -49,5 +50,6 @@ module.exports = {
   DEFAULT_TODO_LISTS_JSON,
   MIME_TYPES,
   MIME_TEXT_PLAIN,
-  SESSIONS_DATA_PATH
+  SESSIONS_DATA_PATH,
+  ERROR_500_MSG
 };

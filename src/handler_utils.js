@@ -1,7 +1,8 @@
 const {
   SESSIONS_DATA_PATH,
   MIME_TEXT_PLAIN,
-  MIME_TYPES
+  MIME_TYPES,
+  ERROR_500_MSG
 } = require('./constants');
 
 const splitKeyValue = pair => pair.split('=');
@@ -20,7 +21,7 @@ const readParameters = (text, separator) => {
 
 const redirectIfNoError = (res, location) => err => {
   if (err) {
-    res.send(500, 'Internal Server Error');
+    res.send(500, ERROR_500_MSG);
     return;
   }
   res.redirect(location);
