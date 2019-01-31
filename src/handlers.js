@@ -80,7 +80,7 @@ const createFileServer = FILES_CACHE =>
 
 const createAddListHandler = (users, sessions, fs) =>
   function(req, res, next) {
-    let { title, description } = readParameters(req.body, '&');
+    let { title, description } = req.body;
     const username = getUsername(req.cookies.sessionId, sessions);
     users.getTodoLists(username).addTODOList(title, description);
     writeToFile(res, users.getAllUsers(), USERS_DATA_PATH, fs);
@@ -90,7 +90,7 @@ const readPostBody = function(req, res, next) {
   let body = '';
   req.on('data', chunk => (body += chunk));
   req.on('end', () => {
-    req.body = body;
+    req.body = readParameters(body, '&');
     next();
   });
 };
@@ -101,7 +101,7 @@ const insertListId = function(content, listId) {
 
 const createAddItemHandler = (users, sessions, fs) =>
   function(req, res, next) {
-    const { listid, itemcontent } = readParameters(req.body, '&');
+    const { listid, itemcontent } = req.body;
     const username = getUsername(req.cookies.sessionId, sessions);
     const targetList = users.getTodoLists(username).getListByID(listid);
     targetList.addItem(itemcontent);
@@ -110,7 +110,7 @@ const createAddItemHandler = (users, sessions, fs) =>
 
 const createDeleteListHandler = (users, sessions, fs) =>
   function(req, res, next) {
-    const listid = +readParameters(req.body, '&').listid;
+    const listid = +req.body.listid;
     const username = getUsername(req.cookies.sessionId, sessions);
     users.getTodoLists(username).deleteListByID(listid);
     writeToFile(res, users.getAllUsers(), USERS_DATA_PATH, fs);
@@ -118,7 +118,7 @@ const createDeleteListHandler = (users, sessions, fs) =>
 
 const createDeleteItemHandler = (users, sessions, fs) =>
   function(req, res, next) {
-    const { listid, itemid } = readParameters(req.body, '&');
+    const { listid, itemid } = req.body;
     const username = getUsername(req.cookies.sessionId, sessions);
     users
       .getTodoLists(username)
@@ -129,7 +129,7 @@ const createDeleteItemHandler = (users, sessions, fs) =>
 
 const createEditItemFormServer = (FILES_CACHE, sessions, users) =>
   function(req, res, next) {
-    const { listid, itemid } = readParameters(req.body, '&');
+    const { listid, itemid } = req.body;
     const username = getUsername(req.cookies.sessionId, sessions);
     const itemContent = users
       .getTodoLists(username)
@@ -146,7 +146,7 @@ const createEditItemFormServer = (FILES_CACHE, sessions, users) =>
 
 const createSaveItemHandler = (users, sessions, fs) =>
   function(req, res, next) {
-    const { itemid, listid, itemcontent } = readParameters(req.body, '&');
+    const { itemid, listid, itemcontent } = req.body;
     const username = getUsername(req.cookies.sessionId, sessions);
     users
       .getTodoLists(username)
@@ -159,7 +159,7 @@ const createSaveItemHandler = (users, sessions, fs) =>
 
 const createEditListHandler = (FILES_CACHE, sessions, users) =>
   function(req, res, next) {
-    const { listid } = readParameters(req.body, '&');
+    const { listid } = req.body;
     const username = getUsername(req.cookies.sessionId, sessions);
     const targetList = users.getTodoLists(username).getListByID(listid);
     const listTitle = targetList.getTitle();
@@ -174,10 +174,7 @@ const createEditListHandler = (FILES_CACHE, sessions, users) =>
 
 const createSaveListHandler = (users, sessions, fs) =>
   function(req, res, next) {
-    const { listid, listtitle, listdescription } = readParameters(
-      req.body,
-      '&'
-    );
+    const { listid, listtitle, listdescription } = req.body;
     const username = getUsername(req.cookies.sessionId, sessions);
     const targetList = users.getTodoLists(username).getListByID(listid);
     targetList.setTitle(listtitle);
@@ -187,7 +184,7 @@ const createSaveListHandler = (users, sessions, fs) =>
 
 const createStatusToggler = (users, sessions, fs) =>
   function(req, res, next) {
-    const { listid, itemid } = readParameters(req.body, '&');
+    const { listid, itemid } = req.body;
     const username = getUsername(req.cookies.sessionId, sessions);
     users
       .getTodoLists(username)
@@ -240,7 +237,7 @@ const createSessionValidator = (
 
 const createLoginHandler = (sessions, users, fs) =>
   function(req, res, next) {
-    const { username, password } = readParameters(req.body, '&');
+    const { username, password } = req.body;
     if (!users.isUserValid(username, password)) {
       res.redirect('/');
       return;
