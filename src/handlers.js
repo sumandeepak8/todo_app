@@ -61,7 +61,7 @@ const logRequest = function(req, res, next) {
   next();
 };
 
-const createHomepageServer = FILES_CACHE =>
+const createHomepageServer = (FILES_CACHE) =>
   function(req, res, next) {
     res.send(200, FILES_CACHE[HOME_PAGE_PATH], resolveMIMEType('html'));
   };
@@ -216,23 +216,26 @@ const isUserLoggedIn = function(sessionId, sessions) {
   return Object.keys(sessions).includes(sessionId);
 };
 
-const createSessionValidator = sessions =>
+const createSessionValidator = (
+  sessions,
+  restrictedUrlsIfLoggedIn,
+  restrictedUrlsIfNotLoggedIn
+) =>
   function(req, res, next) {
     const { sessionId } = req.cookies;
-    const unrestrictedUrls = ['/', '/login', '/index.html'];
-    if (unrestrictedUrls.includes(req.url)) {
+    if (restrictedUrlsIfLoggedIn.includes(req.url)) {
       if (isUserLoggedIn(sessionId, sessions)) {
         res.redirect('/dashboard.html');
         return;
       }
-      next();
-      return;
     }
-    if (isUserLoggedIn(sessionId, sessions)) {
-      next();
-      return;
+    if (restrictedUrlsIfNotLoggedIn.includes(req.url)) {
+      if (!isUserLoggedIn(sessionId, sessions)) {
+        res.redirect('/');
+        return;
+      }
     }
-    res.redirect('/');
+    next();
   };
 
 const createLoginHandler = (sessions, users, fs) =>

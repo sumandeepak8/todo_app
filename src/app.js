@@ -34,15 +34,39 @@ const addList = createAddListHandler(users, sessions, fs);
 const addItem = createAddItemHandler(users, sessions, fs);
 const deleteList = createDeleteListHandler(users, sessions, fs);
 const deleteItem = createDeleteItemHandler(users, sessions, fs);
-const serveEditItemForm = createEditItemFormServer(FILES_CACHE, sessions, users);
+const serveEditItemForm = createEditItemFormServer(
+  FILES_CACHE,
+  sessions,
+  users
+);
 const saveEditedItem = createSaveItemHandler(users, sessions, fs);
 const editlist = createEditListHandler(FILES_CACHE, sessions, users);
 const saveList = createSaveListHandler(users, sessions, fs);
 const toggleStatus = createStatusToggler(users, sessions, fs);
 const serveToDoListsJSON = createToDoListsJSONServer(users, sessions);
-const validateSession = createSessionValidator(sessions);
 const handleLogin = createLoginHandler(sessions, users, fs);
 const handleLogout = createLogoutHandler(sessions, fs);
+
+const restrictedUrlsIfLoggedIn = ['/', '/index.html', '/login'];
+const restrictedUrlsIfNotLoggedIn = [
+  '/dashboard.html',
+  '/todolists',
+  '/addlist',
+  '/additem',
+  '/deletelist',
+  '/deleteitem',
+  '/edititem',
+  '/editlist',
+  '/saveediteditem',
+  '/saveeditedlist',
+  '/togglestatus',
+  '/logout'
+];
+const validateSession = createSessionValidator(
+  sessions,
+  restrictedUrlsIfLoggedIn,
+  restrictedUrlsIfNotLoggedIn
+);
 
 app.use(logRequest);
 app.use(readPostBody);
