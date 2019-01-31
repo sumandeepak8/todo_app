@@ -22,7 +22,7 @@ const redirectIfNoError = (res, location) => err => {
   res.redirect(location);
 };
 
-const saveToDoList = function(res, users, fs) {
+const saveUsers = function(res, users, fs) {
   const usersJSON = JSON.stringify(users.getAllUsers());
   const redirectToDashboard = redirectIfNoError(res, '/dashboard.html');
   fs.writeFile(USERS_DATA_PATH, usersJSON, redirectToDashboard);
@@ -49,7 +49,7 @@ const resolveMIMEType = function(fileExtension) {
 };
 
 module.exports = {
-  saveToDoList,
+  saveUsers,
   readParameters,
   getParametersFromUrl,
   createSessionAdder,

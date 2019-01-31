@@ -1,6 +1,6 @@
 const Users = require('./entities/users');
 const {
-  saveToDoList,
+  saveUsers,
   readParameters,
   createSessionAdder,
   saveSessions,
@@ -83,7 +83,7 @@ const createAddListHandler = (users, sessions, fs) =>
     let { title, description } = readParameters(req.body, '&');
     const username = getUsername(req.cookies.sessionId, sessions);
     users.getTodoLists(username).addTODOList(title, description);
-    saveToDoList(res, users, fs);
+    saveUsers(res, users, fs);
   };
 
 const readPostBody = function(req, res, next) {
@@ -105,7 +105,7 @@ const createAddItemHandler = (users, sessions, fs) =>
     const username = getUsername(req.cookies.sessionId, sessions);
     const targetList = users.getTodoLists(username).getListByID(listid);
     targetList.addItem(itemcontent);
-    saveToDoList(res, users, fs);
+    saveUsers(res, users, fs);
   };
 
 const createDeleteListHandler = (users, sessions, fs) =>
@@ -113,7 +113,7 @@ const createDeleteListHandler = (users, sessions, fs) =>
     const listid = +readParameters(req.body, '&').listid;
     const username = getUsername(req.cookies.sessionId, sessions);
     users.getTodoLists(username).deleteListByID(listid);
-    saveToDoList(res, users, fs);
+    saveUsers(res, users, fs);
   };
 
 const createDeleteItemHandler = (users, sessions, fs) =>
@@ -124,7 +124,7 @@ const createDeleteItemHandler = (users, sessions, fs) =>
       .getTodoLists(username)
       .getListByID(listid)
       .deleteItem(itemid);
-    saveToDoList(res, users, fs);
+    saveUsers(res, users, fs);
   };
 
 const createEditItemFormServer = (FILES_CACHE, sessions, users) =>
@@ -154,7 +154,7 @@ const createSaveItemHandler = (users, sessions, fs) =>
       .getItemById(itemid)
       .setContent(itemcontent);
 
-    saveToDoList(res, users, fs);
+    saveUsers(res, users, fs);
   };
 
 const createEditListHandler = (FILES_CACHE, sessions, users) =>
@@ -182,7 +182,7 @@ const createSaveListHandler = (users, sessions, fs) =>
     const targetList = users.getTodoLists(username).getListByID(listid);
     targetList.setTitle(listtitle);
     targetList.setDescription(listdescription);
-    saveToDoList(res, users, fs);
+    saveUsers(res, users, fs);
   };
 
 const createStatusToggler = (users, sessions, fs) =>
@@ -195,7 +195,7 @@ const createStatusToggler = (users, sessions, fs) =>
       .getItemById(itemid)
       .toggleStatus();
 
-    saveToDoList(res, users, fs);
+    saveUsers(res, users, fs);
   };
 
 const createToDoListsJSONServer = (users, sessions) =>
