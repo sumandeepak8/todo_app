@@ -20,7 +20,6 @@ const {
   LIST_TITLE_PLACEHOLDER,
   DATA_DIRECTORY,
   PUBLIC_DIRECTORY,
-  DEFAULT_TODO_LISTS_JSON,
   SESSIONS_DATA_PATH
 } = require('./constants');
 
@@ -83,7 +82,7 @@ const createAddListHandler = (users, sessions, fs) =>
   function(req, res, next) {
     let { title, description } = req.body;
     const username = getUsername(req.cookies.sessionId, sessions);
-    users.getTodoLists(username).addTODOList(title, description);
+    users.getTodoLists(username).addTodo(title, description);
     writeToFile(res, users.getAllUsers(), USERS_DATA_PATH, fs);
   };
 
@@ -199,8 +198,8 @@ const createStatusToggler = (users, sessions, fs) =>
 const createToDoListsJSONServer = (users, sessions) =>
   function(req, res, next) {
     const username = getUsername(req.cookies.sessionId, sessions);
-    const todoListsJSON = JSON.stringify(users.getTodoLists(username));
-    res.send(200, todoListsJSON, resolveMIMEType('json'));
+    const todosJSON = JSON.stringify(users.getTodoLists(username));
+    res.send(200, todosJSON, resolveMIMEType('json'));
   };
 
 const readCookies = function(req, res, next) {

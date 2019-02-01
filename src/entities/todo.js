@@ -1,6 +1,6 @@
 const TODOItem = require('./todo_item');
 
-class TODOList {
+class Todo {
   constructor(id, title, description, items = [], initialID = 0) {
     this.id = id;
     this.title = title;
@@ -12,7 +12,7 @@ class TODOList {
   static parse(todoListData) {
     const { id, title, description, items, latestItemID } = todoListData;
     const todoItems = items.map(TODOItem.parse);
-    return new TODOList(id, title, description, todoItems, latestItemID);
+    return new Todo(id, title, description, todoItems, latestItemID);
   }
 
   addItem(content) {
@@ -54,4 +54,4 @@ class TODOList {
   }
 }
 
-module.exports = TODOList;
+module.exports = Todo;

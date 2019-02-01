@@ -93,16 +93,16 @@ const getToDoList = function(todoList) {
   return listContainer;
 };
 
-const getToDoLists = function(todoLists) {
-  return todoLists.lists.map(getToDoList);
+const getToDoLists = function(todos) {
+  return todos.lists.map(getToDoList);
 };
 
-const appendTodoLists = function(todoLists) {
-  const todoListsContainer = document.getElementById('todo_lists');
-  appendChildren(todoListsContainer, todoLists);
+const appendTodoLists = function(todos) {
+  const todosContainer = document.getElementById('todo_lists');
+  appendChildren(todosContainer, todos);
 };
 
-const fetchTODOLists = function() {
+const fetchTodos = function() {
   fetch('/todolists')
     .then(response => response.json())
     .then(getToDoLists)
@@ -110,5 +110,5 @@ const fetchTODOLists = function() {
 };
 
 window.onload = function() {
-  fetchTODOLists();
+  fetchTodos();
 };

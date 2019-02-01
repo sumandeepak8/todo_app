@@ -7,14 +7,14 @@ const {
   createAddListHandler
 } = require('../src/handlers');
 
-const TODOLists = require('../src/entities/todo_lists');
+const Todos = require('../src/entities/todos');
 
 const FILES_CACHE = {
   dashboard: `<body>
   <h1>TODO Lists</h1>
   <div>____TODO_LISTS____</div>
 </body>`,
-  todoListsJSON: `{"lists":[{
+  todosJSON: `{"lists":[{
     "id": 1,
     "title": "Sports",
     "description": "About sports",
@@ -55,7 +55,7 @@ xdescribe('serveFile', function() {
 
 xdescribe('serveDashBoard', function() {
   it('should respond with list of todo lists', function() {
-    const todoLists = loadUsers(FILES_CACHE);
+    const todos = loadUsers(FILES_CACHE);
     const res = {};
     res.send = function(statusCode, content, contentType) {
       expect(statusCode).to.equal(200);
@@ -64,7 +64,7 @@ xdescribe('serveDashBoard', function() {
     };
     const req = { method: 'GET', url: '/' };
     const next = () => {};
-    createDashboardServer(FILES_CACHE, todoLists)(req, res, next);
+    createDashboardServer(FILES_CACHE, todos)(req, res, next);
   });
 });
 
@@ -89,7 +89,7 @@ xdescribe('initializeServerCache', function() {
       .to.equal('This is index.html');
 
     expect(fileCache)
-      .to.have.property('todoListsJSON')
+      .to.have.property('todosJSON')
       .to.equal('this is todo_lists.json file');
 
     expect(fileCache)
@@ -111,7 +111,7 @@ xdescribe('createAddListHandler', function() {
     }
   };
 
-  it('should add a list in current todoLists and in file and then should redirect to /', function() {
+  it('should add a list in current todos and in file and then should redirect to /', function() {
     const lists = [
       {
         id: 1,
@@ -129,7 +129,7 @@ xdescribe('createAddListHandler', function() {
       }
     ];
     const latestListID = 0;
-    const todoLists = TODOLists.parse({ lists, latestListID });
+    const todos = Todos.parse({ lists, latestListID });
 
     const res = {};
     res.redirect = function(location) {
@@ -142,13 +142,13 @@ xdescribe('createAddListHandler', function() {
       body: 'title=new+todo&description=this+is+description'
     };
     const next = () => {};
-    createAddListHandler(todoLists, fs)(req, res, next);
+    createAddListHandler(todos, fs)(req, res, next);
   });
 
-  it('should respond with 500 status code when error occurs in writing todoLists to file', function() {
+  it('should respond with 500 status code when error occurs in writing todos to file', function() {
     const lists = [];
     const latestListID = 0;
-    const todoLists = TODOLists.parse({ lists, latestListID });
+    const todos = Todos.parse({ lists, latestListID });
 
     const res = {};
     res.send = function(statusCode, content, contentType) {
@@ -162,6 +162,6 @@ xdescribe('createAddListHandler', function() {
       body: 'title=illegal_title&description=illegal_description'
     };
     const next = () => {};
-    createAddListHandler(todoLists, fs)(req, res, next);
+    createAddListHandler(todos, fs)(req, res, next);
   });
 });

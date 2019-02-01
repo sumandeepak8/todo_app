@@ -1,14 +1,14 @@
-const TODOList = require('../src/entities/todo_list');
+const Todo = require('../src/entities/todo');
 const TODOItem = require('../src/entities/todo_item');
 const expect = require('chai').expect;
 
-describe('TODOList', function() {
+describe('Todo', function() {
   const item1 = new TODOItem(1, 'one', false);
   const item2 = new TODOItem(2, 'two', false);
   const item3 = new TODOItem(3, 'three', false);
 
   it('addItem : should add new item to TODO List', function() {
-    const todoList = new TODOList(
+    const todoList = new Todo(
       1,
       'first list',
       'this contains a list of two items',
@@ -28,13 +28,13 @@ describe('TODOList', function() {
         { id: 2, content: 'two', done: false }
       ]
     };
-    const todoList = TODOList.parse(todoListData);
-    expect(todoList).to.be.a.instanceOf(TODOList);
+    const todoList = Todo.parse(todoListData);
+    expect(todoList).to.be.a.instanceOf(Todo);
   });
 
   it('getItemById: should return a todo item of specified id', function() {
     const items = [item1, item2, item3];
-    const todoList = new TODOList(1, 'title', 'description', items);
+    const todoList = new Todo(1, 'title', 'description', items);
     const todoItemOfID1 = todoList.getItemById(1);
     expect(todoItemOfID1)
       .to.have.property('id')
@@ -43,7 +43,7 @@ describe('TODOList', function() {
 
   it('deleteItemById: should delete a todo item of specified id', function() {
     const items = [item1, item2, item3];
-    const todoList = new TODOList(1, 'title', 'description', items);
+    const todoList = new Todo(1, 'title', 'description', items);
     todoList.deleteItem(1);
     const todoItemOfID1 = todoList.getItemById(1);
     expect(todoItemOfID1).to.be.undefined;

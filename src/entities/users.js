@@ -1,4 +1,4 @@
-const TODOLists = require('./todo_lists');
+const Todos = require('./todos');
 
 class Users {
   constructor(users = {}) {
@@ -9,19 +9,19 @@ class Users {
     const users = {};
     Object.keys(usersData).forEach(username => {
       const { password } = usersData[username];
-      const todoLists = TODOLists.parse(usersData[username].todoLists);
-      users[username] = { password, todoLists };
+      const todos = Todos.parse(usersData[username].todos);
+      users[username] = { password, todos };
     });
     return new Users(users);
   }
 
   addUser(user) {
-    const { username, password, todoLists } = user;
-    this.users[username] = { password, todoLists };
+    const { username, password, todos } = user;
+    this.users[username] = { password, todos };
   }
 
   getTodoLists(username) {
-    return this.users[username].todoLists;
+    return this.users[username].todos;
   }
 
   isUserValid(username, password) {

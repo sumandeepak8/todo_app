@@ -1,23 +1,23 @@
-const TODOList = require('./todo_list');
+const Todo = require('./todo');
 
-class TODOLists {
+class Todos {
   constructor(lists, initialID) {
     this.lists = lists;
     this.latestListID = initialID;
   }
 
   static parse({ lists, latestListID }) {
-    const todoLists = lists.map(TODOList.parse);
-    return new TODOLists(todoLists, latestListID);
+    const todos = lists.map(Todo.parse);
+    return new Todos(todos, latestListID);
   }
 
-  addTODOList(title, description) {
+  addTodo(title, description) {
     this.latestListID = this.latestListID + 1;
-    const todoList = new TODOList(this.latestListID, title, description, [], 0);
+    const todoList = new Todo(this.latestListID, title, description, [], 0);
     this.lists.push(todoList);
   }
 
-  getTODOLists() {
+  getTodos() {
     return this.lists;
   }
 
@@ -30,4 +30,4 @@ class TODOLists {
   }
 }
 
-module.exports = TODOLists;
+module.exports = Todos;
