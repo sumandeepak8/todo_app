@@ -3,12 +3,34 @@
   <head>
     <title>Login Page</title>
     <link rel="stylesheet" type="text/css" href="/main.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Ubuntu:300"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <form action="/login" method="post">
-      <input type="text" name="username" placeholder="Username" />
-      <input type="password" name="password" placeholder="Password" />
-      <input type="submit" value="Login" />
-    </form>
+    <header><span class="appname-header">Do-It</span></header>
+    <main class="centerizing-flex">
+      <section class="login-form-container">
+        <p class="form-title centerizing-flex">Login</p>
+        <hr />
+        <form action="/login" method="post">
+          <input
+            class="general-input"
+            type="text"
+            name="username"
+            placeholder="Username"
+          />
+          <input
+            class="general-input"
+            type="password"
+            name="password"
+            placeholder="Password"
+          />
+          <input class="general-input button" type="submit" value="Login" />
+        </form>
+      </section>
+    </main>
+    <footer></footer>
   </body>
 </html>
